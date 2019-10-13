@@ -1,0 +1,13 @@
+
+# Created by https://www.gitignore.io/api/java-web,appengine
+# Edit at https://www.gitignore.io/?templates=java-web,appengine
+
+### AppEngine ###
+# Google App Engine generated folder
+appengine-generated/
+
+### Java-Web ###
+## ignoring target file
+target/
+
+# End of https://www.gitignore.io/api/java-web,appengine
