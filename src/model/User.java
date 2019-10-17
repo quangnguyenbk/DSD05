@@ -21,19 +21,15 @@ public class User {
 		
 	}
 	
-	
-	
 	public User(String name, int age) {
-		super();
 		this.name = name;
 		this.age = age;
 	}
 
-
-
 	public long getId() {
 		return id;
 	}
+	
 	public void setId(long id) {
 		this.id = id;
 	}
