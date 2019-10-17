@@ -1,13 +1,18 @@
 package model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
-public class UserGroup {
+@Entity
+@XmlRootElement
+public class GroupRole {
 	@Id
 	private Long id;
 	@Index
-	private long userId;
+	private long roleId;
 	@Index
 	private long groupId;
 	@Index
@@ -17,14 +22,13 @@ public class UserGroup {
 	@Index
 	private long lastUpdated;
 	
-	public UserGroup(){
-		
+	public GroupRole() {
 	}
 
-	public UserGroup(Long id, long userId, long groupId, long createdDate, long statusId, long lastUpdated) {
+	public GroupRole(Long id, long roleId, long groupId, long createdDate, long statusId, long lastUpdated) {
 		super();
 		this.id = id;
-		this.userId = userId;
+		this.roleId = roleId;
 		this.groupId = groupId;
 		this.createdDate = createdDate;
 		this.statusId = statusId;
@@ -39,12 +43,12 @@ public class UserGroup {
 		this.id = id;
 	}
 
-	public long getUserId() {
-		return userId;
+	public long getRoleId() {
+		return roleId;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setRoleId(long roleId) {
+		this.roleId = roleId;
 	}
 
 	public long getGroupId() {
@@ -78,5 +82,6 @@ public class UserGroup {
 	public void setLastUpdated(long lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
-	
+
+
 }

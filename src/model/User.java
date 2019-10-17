@@ -16,21 +16,31 @@ public class User {
 	private String name;
 	@Index
 	private int age;
-	
+	@Index
+	String gender;
+	@Index
+	long birthday;
+	@Index
+	String email;
+	@Index
+	long phoneNumber;
 	public User() {
 		
 	}
-	
-	public User(String name, int age) {
+	public User(Long id, String name, int age, String gender, long birthday, String email, long phoneNumber) {
+		super();
+		this.id = id;
 		this.name = name;
 		this.age = age;
+		this.gender = gender;
+		this.birthday = birthday;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
 	}
-
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -44,6 +54,30 @@ public class User {
 	}
 	public void setAge(int age) {
 		this.age = age;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public long getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(long birthday) {
+		this.birthday = birthday;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public long getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(long phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 	
 	
