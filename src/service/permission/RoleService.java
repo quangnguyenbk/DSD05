@@ -8,6 +8,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -23,7 +25,7 @@ public class RoleService {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Group addUserGroup(Group usergroup) {
+	public Group addUserGroup(Group usergroup, @Suspended AsyncResponse response) {
 		long test = new Long("11");
 		Group group = new Group( test, "test", test, test, test, "description", test, test, test);
 		return group;
@@ -32,7 +34,7 @@ public class RoleService {
 	@Path("/getAllGroup")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<Group> getAllUserGroup(){
+	public ArrayList<Group> getAllUserGroup(@Suspended AsyncResponse response){
 		ArrayList<Group> list = new ArrayList<Group>();
 		for (int i = 1; i< 4; i ++) {
 			long test = new Long(i+"");
@@ -149,4 +151,14 @@ public class RoleService {
 			      .entity(message)
 			      .build();
 	}
+	
+		@Path("/test")
+	   @GET
+	    public void asyncRestMethod(@Suspended final AsyncResponse asyncResponse) {
+	                String result = heavyLifting();
+	                asyncResponse.resume(result);
+	            }
+	     private String heavyLifting() {
+	                return "RESULT";
+	      }
 }

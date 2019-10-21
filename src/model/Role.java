@@ -22,4 +22,8 @@ public class Role {
 	private long statusId;
 	@Index
 	private long lastUpdated;
+	
+	public Role() {
+		
+	}
 }
