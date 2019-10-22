@@ -6,7 +6,7 @@ import javax.servlet.ServletContextListener;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 
-import model.User;
+import model.UserInfo;
 
 public class MyBootstrapper implements ServletContextListener {
 	@Override
@@ -19,7 +19,7 @@ public class MyBootstrapper implements ServletContextListener {
 				return null;
 			}
 		});
-		ObjectifyService.register(User.class);
+		ObjectifyService.register(UserInfo.class);
 	}
 
 	@Override

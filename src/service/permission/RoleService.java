@@ -152,13 +152,4 @@ public class RoleService {
 			      .build();
 	}
 	
-		@Path("/test")
-	   @GET
-	    public void asyncRestMethod(@Suspended final AsyncResponse asyncResponse) {
-	                String result = heavyLifting();
-	                asyncResponse.resume(result);
-	            }
-	     private String heavyLifting() {
-	                return "RESULT";
-	      }
 }

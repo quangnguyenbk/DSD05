@@ -9,13 +9,11 @@ import com.googlecode.objectify.annotation.Index;
 
 @Entity
 @XmlRootElement
-public class User {
+public class UserInfo {
 	@Id
 	private Long id;
 	@Index
 	private String name;
-	@Index
-	private int age;
 	@Index
 	String gender;
 	@Index
@@ -24,19 +22,40 @@ public class User {
 	String email;
 	@Index
 	long phoneNumber;
-	public User() {
+	@Index
+	String address;
+	@Index
+	long departmentId;
+	@Index
+	long statusId;
+	@Index
+	long dateCreated;
+	@Index
+	long lastUpdate;
+	public UserInfo() {
 		
 	}
-	public User(Long id, String name, int age, String gender, long birthday, String email, long phoneNumber) {
+	
+	public UserInfo(Long id, String name, String gender, long birthday, String email, long phoneNumber, String address,
+			long departmentId, long statusId, long dateCreated, long lastUpdate) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.age = age;
 		this.gender = gender;
 		this.birthday = birthday;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
+		this.address = address;
+		this.departmentId = departmentId;
+		this.statusId = statusId;
+		this.dateCreated = dateCreated;
+		this.lastUpdate = lastUpdate;
 	}
+
+
+
+
+
 	public Long getId() {
 		return id;
 	}
@@ -48,12 +67,6 @@ public class User {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
 	}
 	public String getGender() {
 		return gender;
@@ -79,6 +92,35 @@ public class User {
 	public void setPhoneNumber(long phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	public long getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(long dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public long getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(long lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public long getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(long statusId) {
+		this.statusId = statusId;
+	}
+	
 	
 	
 }
