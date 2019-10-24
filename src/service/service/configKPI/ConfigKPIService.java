@@ -25,8 +25,9 @@ public class ConfigKPIService {
 	public ArrayList<DepartmentCriterialKPI> getDepartmentCriterialKPI() {
 		ArrayList<DepartmentCriterialKPI> list = new ArrayList<DepartmentCriterialKPI>();
 		for (int i = 1; i< 4; i ++) {
-			long test = new Long(i+"");
-			DepartmentCriterialKPI group = new DepartmentCriterialKPI( test, test, "test", "test", test);
+			long test = new Long("1");
+			long id = new Long(i);
+			DepartmentCriterialKPI group = new DepartmentCriterialKPI( id, 1, i, 100 , 25, test );
 			list.add(group);
 		}
 		return list;
@@ -38,8 +39,9 @@ public class ConfigKPIService {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public DepartmentCriterialKPI addDepartmentCriterialKPI(DepartmentCriterialKPI departmentCriterialKPI) {
-		long test = new Long("11");
-		DepartmentCriterialKPI criteria = new DepartmentCriterialKPI( test, test, "test", "test", test);
+		long test = new Long("1");
+		long id = new Long("1");
+		DepartmentCriterialKPI criteria = new DepartmentCriterialKPI( id, 1, id, 100 , 25, test);
 		return criteria;    
 	}
 	
@@ -48,8 +50,9 @@ public class ConfigKPIService {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public DepartmentCriterialKPI updateDepartmentCriterialKPI(DepartmentCriterialKPI departmentCriterialKPI) {
-		long test = new Long("11");
-		DepartmentCriterialKPI criteria = new DepartmentCriterialKPI( test, test, "test", "test", test);
+		long test = new Long("1");
+		long id = new Long("1");
+		DepartmentCriterialKPI criteria = new DepartmentCriterialKPI( id, 1, id, 100 , 25, test);
 		return criteria;    
 	}
 	
@@ -69,8 +72,9 @@ public class ConfigKPIService {
 	public ArrayList<CiteriaJobpositionKPI> getCiteriaJobpositionKPI() {
 		ArrayList<CiteriaJobpositionKPI> list = new ArrayList<CiteriaJobpositionKPI>();
 		for (int i = 1; i< 4; i ++) {
-			long test = new Long(i+"");
-			CiteriaJobpositionKPI group = new CiteriaJobpositionKPI( test, test, test, "test", test, test, test);
+			long test = new Long("1");
+			long id = new Long(i);
+			CiteriaJobpositionKPI group = new CiteriaJobpositionKPI( id, 1, id, id, 100 , 25, test);
 			list.add(group);
 		}
 		return list;
@@ -82,8 +86,9 @@ public class ConfigKPIService {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public CiteriaJobpositionKPI addCiteriaJobpositionKPI(CiteriaJobpositionKPI citeriaJobpositionKPI) {
-		long test = new Long("11");
-		CiteriaJobpositionKPI criteria = new CiteriaJobpositionKPI( test, test, test, "test", test, test, test);
+		long test = new Long("1");
+		long id = new Long("1");
+		CiteriaJobpositionKPI criteria = new CiteriaJobpositionKPI( id, 1, id, id, 100 , 25, test);
 		return criteria;    
 	}
 	
@@ -92,8 +97,9 @@ public class ConfigKPIService {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public CiteriaJobpositionKPI updatev(CiteriaJobpositionKPI citeriaJobpositionKPI) {
-		long test = new Long("11");
-		CiteriaJobpositionKPI criteria = new CiteriaJobpositionKPI( test, test, test, "test", test, test, test);
+		long test = new Long("1");
+		long id = new Long("1");
+		CiteriaJobpositionKPI criteria = new CiteriaJobpositionKPI( id, 1, id, id, 100 , 25, test);
 		return criteria;    
 	}
 	
@@ -113,8 +119,9 @@ public class ConfigKPIService {
 	public ArrayList<CiteriaProjectKPI> getCiteriaProjectKPI() {
 		ArrayList<CiteriaProjectKPI> list = new ArrayList<CiteriaProjectKPI>();
 		for (int i = 1; i< 4; i ++) {
-			long test = new Long(i+"");
-			CiteriaProjectKPI group = new CiteriaProjectKPI( test, test, test, "test", test, test, test);
+			long test = new Long("1");
+			long id = new Long(i);
+			CiteriaProjectKPI group = new CiteriaProjectKPI( id, 1, id, 100 , 25, test);
 			list.add(group);
 		}
 		return list;
@@ -126,8 +133,9 @@ public class ConfigKPIService {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public CiteriaProjectKPI addCiteriaProjectKPI(CiteriaProjectKPI citeriaProjectKPI) {
-		long test = new Long("11");
-		CiteriaProjectKPI criteria = new CiteriaProjectKPI( test, test, test, "test", test, test, test);
+		long test = new Long("1");
+		long id = new Long("1");
+		CiteriaProjectKPI criteria = new CiteriaProjectKPI( id, 1, id, 100 , 25, test);
 		return criteria;    
 	}
 	
@@ -136,8 +144,9 @@ public class ConfigKPIService {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public CiteriaProjectKPI updateCiteriaProjectKPI(CiteriaProjectKPI citeriaProjectKPI) {
-		long test = new Long("11");
-		CiteriaProjectKPI criteria = new CiteriaProjectKPI( test, test, test, "test", test, test, test);
+		long test = new Long("1");
+		long id = new Long("1");
+		CiteriaProjectKPI criteria = new CiteriaProjectKPI( id, 1, id, 100 , 25, test);
 		return criteria;    
 	}
 	

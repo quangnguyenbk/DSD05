@@ -7,8 +7,6 @@ public class CiteriaProjectKPI {
 	@Id
 	private Long id;
 	@Index
-	private long departmentId;
-	@Index
 	private long projectId;
 	@Index
 	private long criterialId;
@@ -17,14 +15,13 @@ public class CiteriaProjectKPI {
 	@Index 
 	private long percentKPI;
 	@Index
-	private String status;
+	private long status;
 	public CiteriaProjectKPI() {
 	}
 
-	public CiteriaProjectKPI(Long id, long departmentId, long projectId, String status, long criterialId, long indexAchieve, long percentKPI) {
+	public CiteriaProjectKPI(Long id,long projectId, long criterialId, long indexAchieve, long percentKPI, long status) {
 		super();
 		this.id = id;
-		this.departmentId = departmentId;
 		this.projectId = projectId;
 		this.criterialId = criterialId;
 		this.indexAchieve = indexAchieve;
@@ -38,14 +35,6 @@ public class CiteriaProjectKPI {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public long getDepartmentId() {
-		return departmentId;
-	}
-
-	public void setDepartmentId(long departmentId) {
-		this.departmentId = departmentId;
 	}
 
 	public long getProjectId() {
@@ -77,11 +66,11 @@ public class CiteriaProjectKPI {
 	public void setPercentKPI(long percentKPI) {
 		this.percentKPI = percentKPI;
 	}
-	public String getStatus() {
+	public long getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(long status) {
 		this.status = status;
 	}
 }

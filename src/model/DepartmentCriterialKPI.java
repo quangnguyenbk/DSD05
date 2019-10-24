@@ -9,20 +9,23 @@ public class DepartmentCriterialKPI {
 	@Index
 	private long departmentId;
 	@Index
-	private String criteriaName;
+	private long criteriaId;
 	@Index
 	private long indexCriteria;
 	@Index
-	private String status;
+	private long percentKPI;
+	@Index
+	private long status;
 	public DepartmentCriterialKPI() {
 	}
 
-	public DepartmentCriterialKPI(Long id, long departmentId, String criteriaName, String status, long indexCriteria) {
+	public DepartmentCriterialKPI(Long id, long departmentId, long criteriaId, long indexCriteria,long percentKPI, long status) {
 		super();
 		this.id = id;
 		this.departmentId = departmentId;
-		this.criteriaName = criteriaName;
+		this.criteriaId = criteriaId;
 		this.indexCriteria = indexCriteria;
+		this.percentKPI = percentKPI;
 		this.status = status;
 	}
 
@@ -42,12 +45,12 @@ public class DepartmentCriterialKPI {
 		this.departmentId = departmentId;
 	}
 
-	public String getCriteriaName() {
-		return criteriaName;
+	public long getcriteriaId() {
+		return criteriaId;
 	}
 
-	public void setCriteriaName(String criteriaName) {
-		this.criteriaName = criteriaName;
+	public void setCriteriaId(long criteriaId) {
+		this.criteriaId = criteriaId;
 	}
 
 	public long getIndexCriteria() {
@@ -57,12 +60,20 @@ public class DepartmentCriterialKPI {
 	public void setIndexCriteria(long indexCriteria) {
 		this.indexCriteria = indexCriteria;
 	}
+	
+	public long getPercentKPI() {
+		return percentKPI;
+	}
 
-	public String getStatus() {
+	public void setPercentKPI(long percentKPI) {
+		this.percentKPI = percentKPI;
+	}
+	
+	public long getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(long status) {
 		this.status = status;
 	}
 }

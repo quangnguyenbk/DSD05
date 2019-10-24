@@ -17,11 +17,11 @@ public class CiteriaJobpositionKPI {
 	@Index 
 	private long percentKPI;
 	@Index
-	private String status;
+	private long status;
 	public CiteriaJobpositionKPI() {
 	}
 
-	public CiteriaJobpositionKPI(Long id, long departmentId, long jobPositionId, String status, long criterialId, long indexAchieve, long percentKPI) {
+	public CiteriaJobpositionKPI(Long id, long departmentId, long jobPositionId, long criterialId, long indexAchieve, long percentKPI, long status) {
 		super();
 		this.id = id;
 		this.departmentId = departmentId;
@@ -77,11 +77,11 @@ public class CiteriaJobpositionKPI {
 	public void setPercentKPI(long percentKPI) {
 		this.percentKPI = percentKPI;
 	}
-	public String getStatus() {
+	public long getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(long status) {
 		this.status = status;
 	}
 }
