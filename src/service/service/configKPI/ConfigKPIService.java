@@ -7,62 +7,135 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import dao.UserDao;
+import dao.ConfigKPIDao;
 import model.CiteriaJobpositionKPI;
 import model.CiteriaProjectKPI;
 import model.DepartmentCriterialKPI;
+import model.ResponseData;
+
 
 
 @Path("/configKPI")
 public class ConfigKPIService {
-	
+	ConfigKPIDao configKPIDao = new ConfigKPIDao();
 	@Path("/getDepartmentCriterialKPI")
 	@GET
-    @Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<DepartmentCriterialKPI> getDepartmentCriterialKPI() {
-		ArrayList<DepartmentCriterialKPI> list = new ArrayList<DepartmentCriterialKPI>();
-		for (int i = 1; i< 4; i ++) {
-			long test = new Long("1");
-			long id = new Long(i);
-			DepartmentCriterialKPI group = new DepartmentCriterialKPI( id, 1, i, 100 , 25, test );
-			list.add(group);
+	public Response getDepartmentCriterialKPI(@QueryParam("departmentId") long departmentId) {
+		try {
+			ArrayList<DepartmentCriterialKPI> list = new ArrayList<DepartmentCriterialKPI>();
+			list.addAll(configKPIDao.getAllDepartmentCriterialKPI(departmentId));
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(list)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
 		}
-		return list;
-        
 	}
-	
 	@Path("/addDepartmentCriterialKPI")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public DepartmentCriterialKPI addDepartmentCriterialKPI(DepartmentCriterialKPI departmentCriterialKPI) {
-		long test = new Long("1");
-		long id = new Long("1");
-		DepartmentCriterialKPI criteria = new DepartmentCriterialKPI( id, 1, id, 100 , 25, test);
-		return criteria;    
+	public Response addDepartmentCriterialKPI(DepartmentCriterialKPI departmentCriterialKPI) {
+		try {
+			ResponseData response = new ResponseData();
+			// check null
+			if (departmentCriterialKPI.getDepartmentId() == 0 || departmentCriterialKPI.getCriteriaId() == 0) {
+				response.setMessage("Thiếu dữ liệu");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build(); 
+			}
+			//check exist
+			DepartmentCriterialKPI department = configKPIDao.getDepartmentCriterialKPI(departmentCriterialKPI.getDepartmentId(), departmentCriterialKPI.getCriteriaId());
+			if (department != null) {
+				response.setMessage("Đã tồn tại tiêu chí này");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build(); 
+			}
+			
+			// add DepartmentCriterialKPI
+			configKPIDao.addDepartmentCriterialKPI(departmentCriterialKPI);
+			DepartmentCriterialKPI info = configKPIDao.getDepartmentCriterialKPI(departmentCriterialKPI.getDepartmentId(), departmentCriterialKPI.getCriteriaId());
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(info)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}
 	}
 	
 	@Path("/updateDepartmentCriterialKPI")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public DepartmentCriterialKPI updateDepartmentCriterialKPI(DepartmentCriterialKPI departmentCriterialKPI) {
-		long test = new Long("1");
-		long id = new Long("1");
-		DepartmentCriterialKPI criteria = new DepartmentCriterialKPI( id, 1, id, 100 , 25, test);
-		return criteria;    
+	public Response updateDepartmentCriterialKPI(DepartmentCriterialKPI departmentCriterialKPI) {
+		try {
+			ResponseData response = new ResponseData();
+			//check exist
+			DepartmentCriterialKPI department = configKPIDao.getDepartmentCriterialKPI(departmentCriterialKPI.getDepartmentId(), departmentCriterialKPI.getCriteriaId());
+			System.out.println(department);
+			if (department == null) {
+				response.setMessage("Không tồn tại tiêu chí này");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build(); 
+			}
+			// add DepartmentCriterialKPI
+			configKPIDao.updateDepartmentCriterialKPI(departmentCriterialKPI);
+			DepartmentCriterialKPI info = configKPIDao.getDepartmentCriterialKPI(departmentCriterialKPI.getDepartmentId(), departmentCriterialKPI.getCriteriaId());
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(info)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}
 	}
 	
 	@Path("/deleteDepartmentCriterialKPI")
 	@GET
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateDepartmentCriterialKPI() {
-		String test = new String("Delete success");
-		return test;    
+	public Response updateDepartmentCriterialKPI(@QueryParam("id") Long id) {
+		try {
+			configKPIDao.deleteDepartmentCriterialKPI(id);
+			ResponseData response = new ResponseData();
+			response.setMessage("Xóa thành công");
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(response)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		} 
 	}
 	
 	@Path("/getCiteriaJobpositionKPI")

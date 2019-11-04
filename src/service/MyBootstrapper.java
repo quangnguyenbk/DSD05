@@ -6,6 +6,7 @@ import javax.servlet.ServletContextListener;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 
+import model.DepartmentCriterialKPI;
 import model.UserInfo;
 
 public class MyBootstrapper implements ServletContextListener {
@@ -19,6 +20,7 @@ public class MyBootstrapper implements ServletContextListener {
 				return null;
 			}
 		});
+		ObjectifyService.register(DepartmentCriterialKPI.class);
 		ObjectifyService.register(UserInfo.class);
 	}
 
