@@ -8,13 +8,13 @@ import com.googlecode.objectify.annotation.Index;
 
 @Entity
 @XmlRootElement
-public class GroupRole {
+public class UserPermission {
 	@Id
 	private Long id;
 	@Index
 	private long roleId;
 	@Index
-	private long groupId;
+	private long userId;
 	@Index
 	private long createdDate;
 	@Index
@@ -22,14 +22,14 @@ public class GroupRole {
 	@Index
 	private long lastUpdated;
 	
-	public GroupRole() {
+	public UserPermission() {
 	}
 
-	public GroupRole(Long id, long roleId, long groupId, long createdDate, long statusId, long lastUpdated) {
+	public UserPermission(Long id, long roleId, long groupId, long createdDate, long statusId, long lastUpdated) {
 		super();
 		this.id = id;
 		this.roleId = roleId;
-		this.groupId = groupId;
+		this.userId = groupId;
 		this.createdDate = createdDate;
 		this.statusId = statusId;
 		this.lastUpdated = lastUpdated;
@@ -52,11 +52,11 @@ public class GroupRole {
 	}
 
 	public long getGroupId() {
-		return groupId;
+		return userId;
 	}
 
 	public void setGroupId(long groupId) {
-		this.groupId = groupId;
+		this.userId = groupId;
 	}
 
 	public long getCreatedDate() {
