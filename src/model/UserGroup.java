@@ -1,8 +1,12 @@
 package model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-
+@Entity
+@XmlRootElement
 public class UserGroup {
 	@Id
 	private Long id;

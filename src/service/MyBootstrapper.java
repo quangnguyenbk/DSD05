@@ -9,7 +9,12 @@ import com.googlecode.objectify.Work;
 import model.CiteriaJobpositionKPI;
 import model.CiteriaProjectKPI;
 import model.DepartmentCriterialKPI;
+import model.Group;
+import model.GroupPermission;
+import model.Permission;
+import model.UserGroup;
 import model.UserInfo;
+import model.UserPermission;
 
 public class MyBootstrapper implements ServletContextListener {
 	@Override
@@ -26,6 +31,11 @@ public class MyBootstrapper implements ServletContextListener {
 		ObjectifyService.register(CiteriaJobpositionKPI.class);
 		ObjectifyService.register(CiteriaProjectKPI.class);
 		ObjectifyService.register(UserInfo.class);
+		ObjectifyService.register(Group.class);
+		ObjectifyService.register(UserGroup.class);
+		ObjectifyService.register(GroupPermission.class);
+		ObjectifyService.register(Permission.class);
+		ObjectifyService.register(UserPermission.class);
 		
 	}
 

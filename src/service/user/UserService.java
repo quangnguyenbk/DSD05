@@ -1,7 +1,12 @@
 package service.user;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -9,15 +14,19 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import dao.UserDao;
 import model.Group;
-import model.GroupRole;
+import model.GroupPermission;
 import model.UserInfo;
 import model.UserGroup;
-import model.UserRole;
+import model.UserPermission;
+import utils.CommonUtils;
 import utils.Config;
 
 @Path("/user")
@@ -109,6 +118,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addUserInfo(UserInfo user) {
+		CommonUtils.getLog().info("service addUserInfo was called  "+ user.toString() ); 
 		// check null
 		if (user.getName() == null || user.getEmail() == null ) {
 			return Response
@@ -137,32 +147,22 @@ public class UserService {
 	@Path("/getUserInfos")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<UserInfo> getUserInfos(	@QueryParam("departmentId") int departmentId,
-											@QueryParam("projectId") int projectId,
-											@QueryParam("groupId") int groupId){
+	public ArrayList<UserInfo> getUserInfos(@Context UriInfo uriDetails){
+		
+	    CommonUtils.getLog().info("service getUserInfos was called by " + uriDetails.getAbsolutePath());  
 		ArrayList<UserInfo> listInfo = new ArrayList<UserInfo>();
 		listInfo.addAll(userDao.getUserInfos());
 		return listInfo;
 	}
 	
-	@Path("/changePassword")
-	@POST
-    @Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_HTML)
-	public String changePassword(UserInfo user) {
-		return "success";
+	@Path("/getLog")
+	@GET
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response getFile() {
+	  File file = new File("log.txt");
+	  return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+	      .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
+	      .build();
 	}
 	
-	@Path("/listDepartmentUser")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<UserInfo> listDepartmentUser(){
-		ArrayList<UserInfo> list = new ArrayList<UserInfo>();
-		for(int i =1 ; i< 6; i ++) {
-			Long a = new Long(i);
-			UserInfo test = new UserInfo();
-			list.add(test);
-		}
-		return list;
-	}
 }
