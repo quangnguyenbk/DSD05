@@ -1,7 +1,13 @@
 package model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+
+@Entity
+@XmlRootElement
 
 public class CiteriaJobpositionKPI {
 	@Id
@@ -15,6 +21,8 @@ public class CiteriaJobpositionKPI {
 	@Index
 	private long indexCriteria = 0;
 	@Index
+	private String descriptionCriteria;
+	@Index
 	private long status;
 	@Index
 	long dateCreated;
@@ -23,13 +31,14 @@ public class CiteriaJobpositionKPI {
 	public CiteriaJobpositionKPI() {
 	}
 
-	public CiteriaJobpositionKPI(Long id, long departmentId, long jobPositionId, long criterialId, long indexCriteria, long status, long dateCreated, long lastUpdate) {
+	public CiteriaJobpositionKPI(Long id, long departmentId, long jobPositionId, long criterialId, long indexCriteria, String descriptionCriteria, long status, long dateCreated, long lastUpdate) {
 		super();
 		this.id = id;
 		this.departmentId = departmentId;
 		this.jobPositionId = jobPositionId;
 		this.criterialId = criterialId;
 		this.indexCriteria = indexCriteria;
+		this.descriptionCriteria = descriptionCriteria;
 		this.status = status;
 		this.dateCreated = dateCreated;
 		this.lastUpdate = lastUpdate;
@@ -72,6 +81,13 @@ public class CiteriaJobpositionKPI {
 
 	public void setIndexCriteria(long indexCriteria) {
 		this.indexCriteria = indexCriteria;
+	}
+	public String getDescriptionCriteria() {
+		return descriptionCriteria;
+	}
+
+	public void setDescriptionCriteria(String descriptionCriteria) {
+		this.descriptionCriteria = descriptionCriteria;
 	}
 	public long getStatus() {
 		return status;

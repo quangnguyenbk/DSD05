@@ -1,7 +1,13 @@
 package model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+
+@Entity
+@XmlRootElement
 
 public class CiteriaProjectKPI {
 	@Id
@@ -12,21 +18,27 @@ public class CiteriaProjectKPI {
 	private long criterialId;
 	@Index
 	private long indexAchieve;
-	@Index 
-	private long percentKPI;
+	@Index
+	private String descriptionCriteria;
 	@Index
 	private long status;
+	@Index
+	long dateCreated;
+	@Index
+	long lastUpdate;
 	public CiteriaProjectKPI() {
 	}
 
-	public CiteriaProjectKPI(Long id,long projectId, long criterialId, long indexAchieve, long percentKPI, long status) {
+	public CiteriaProjectKPI(Long id,long projectId, long criterialId, long indexAchieve, String descriptionCriteria, long status, long dateCreated, long lastUpdate) {
 		super();
 		this.id = id;
 		this.projectId = projectId;
 		this.criterialId = criterialId;
 		this.indexAchieve = indexAchieve;
-		this.percentKPI = percentKPI;
+		this.descriptionCriteria = descriptionCriteria;
 		this.status = status;
+		this.dateCreated = dateCreated;
+		this.lastUpdate = lastUpdate;
 	}
 
 	public Long getId() {
@@ -59,12 +71,12 @@ public class CiteriaProjectKPI {
 	public void setIndexAchieve(long indexAchieve) {
 		this.indexAchieve = criterialId;
 	}
-	public long getPercentKPI() {
-		return percentKPI;
+	public String getDescriptionCriteria() {
+		return descriptionCriteria;
 	}
 
-	public void setPercentKPI(long percentKPI) {
-		this.percentKPI = percentKPI;
+	public void setDescriptionCriteria(String descriptionCriteria) {
+		this.descriptionCriteria = descriptionCriteria;
 	}
 	public long getStatus() {
 		return status;
@@ -72,5 +84,17 @@ public class CiteriaProjectKPI {
 
 	public void setStatus(long status) {
 		this.status = status;
+	}
+	public long getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(long dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public long getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(long lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}
 }
