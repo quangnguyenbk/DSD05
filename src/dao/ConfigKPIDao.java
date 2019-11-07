@@ -60,8 +60,8 @@ public class ConfigKPIDao {
 		jobposition.setStatus(Config.USER_INACTIVE);
 		ofy().save().entity(jobposition).now();
 	}
-	public CiteriaJobpositionKPI getCiteriaJobpositionKPI (long departmentId, long jobPositionId, long criteriaId) {
-		return ofy().load().type(CiteriaJobpositionKPI.class).filter("departmentId", departmentId).filter("jobPositionId", jobPositionId).filter("criteriaId", criteriaId).filter("status", Config.USER_ACTIVE).first().now();
+	public CiteriaJobpositionKPI getCiteriaJobpositionKPI (long departmentId, long jobPositionId, long criterialId) {
+		return ofy().load().type(CiteriaJobpositionKPI.class).filter("departmentId", departmentId).filter("jobPositionId", jobPositionId).filter("criterialId", criterialId).filter("status", Config.USER_ACTIVE).first().now();
 	}
 	public CiteriaJobpositionKPI getIdCiteriaJobpositionKPI (Long id) {
 		return ofy().load().type(CiteriaJobpositionKPI.class).id(id).now();
