@@ -90,11 +90,18 @@ public class ConfigKPIService {
 	public Response updateDepartmentCriterialKPI(DepartmentCriterialKPI departmentCriterialKPI) {
 		try {
 			ResponseData response = new ResponseData();
+			Long id = departmentCriterialKPI.getId();
 			//check exist
-			DepartmentCriterialKPI department = configKPIDao.getDepartmentCriterialKPI(departmentCriterialKPI.getDepartmentId(), departmentCriterialKPI.getCriteriaId());
-			System.out.println(department);
+			DepartmentCriterialKPI department = configKPIDao.getIdDepartmentCriterialKPI(id);
 			if (department == null) {
 				response.setMessage("Không tồn tại tiêu chí này");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build(); 
+			}
+			if (department.getCriteriaId() != departmentCriterialKPI.getCriteriaId() || department.getDepartmentId() != departmentCriterialKPI.getDepartmentId()) {
+				response.setMessage("Không trùng khớp mã phòng ban và mã tiêu chí");
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity(response)
@@ -120,7 +127,7 @@ public class ConfigKPIService {
 	@GET
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateDepartmentCriterialKPI(@QueryParam("id") Long id) {
+	public Response deleteDepartmentCriterialKPI(@QueryParam("id") Long id) {
 		try {
 			configKPIDao.deleteDepartmentCriterialKPI(id);
 			ResponseData response = new ResponseData();
@@ -142,15 +149,21 @@ public class ConfigKPIService {
 	@GET
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<CiteriaJobpositionKPI> getCiteriaJobpositionKPI() {
-		ArrayList<CiteriaJobpositionKPI> list = new ArrayList<CiteriaJobpositionKPI>();
-		for (int i = 1; i< 4; i ++) {
-			long test = new Long("1");
-			long id = new Long(i);
-			CiteriaJobpositionKPI group = new CiteriaJobpositionKPI( id, 1, id, id, 100 , 25, test);
-			list.add(group);
+	public Response getCiteriaJobpositionKPI(@QueryParam("departmentId") long departmentId) {
+		try {
+			ArrayList<CiteriaJobpositionKPI> list = new ArrayList<CiteriaJobpositionKPI>();
+			list.addAll(configKPIDao.getAllCiteriaJobpositionKPI(departmentId));
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(list)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
 		}
-		return list;
         
 	}
 	
@@ -158,31 +171,103 @@ public class ConfigKPIService {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public CiteriaJobpositionKPI addCiteriaJobpositionKPI(CiteriaJobpositionKPI citeriaJobpositionKPI) {
-		long test = new Long("1");
-		long id = new Long("1");
-		CiteriaJobpositionKPI criteria = new CiteriaJobpositionKPI( id, 1, id, id, 100 , 25, test);
-		return criteria;    
+	public Response addCiteriaJobpositionKPI(CiteriaJobpositionKPI citeriaJobpositionKPI) {
+		try {
+			ResponseData response = new ResponseData();
+			// check null
+			if (citeriaJobpositionKPI.getDepartmentId() == 0 || citeriaJobpositionKPI.getCriterialId() == 0 || citeriaJobpositionKPI.getJobPositionId() == 0) {
+				response.setMessage("Thiếu dữ liệu");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build(); 
+			}
+			//check exist
+			CiteriaJobpositionKPI jobposition = configKPIDao.getCiteriaJobpositionKPI(citeriaJobpositionKPI.getDepartmentId(),citeriaJobpositionKPI.getJobPositionId(),citeriaJobpositionKPI.getCriterialId());
+			if (jobposition != null) {
+				response.setMessage("Đã tồn tại tiêu chí này");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build(); 
+			}
+			
+			// add DepartmentCriterialKPI
+			configKPIDao.addCiteriaJobpositionKPI(citeriaJobpositionKPI);
+			CiteriaJobpositionKPI info = configKPIDao.getCiteriaJobpositionKPI(citeriaJobpositionKPI.getDepartmentId(),citeriaJobpositionKPI.getJobPositionId(),citeriaJobpositionKPI.getCriterialId());
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(info)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}    
 	}
 	
 	@Path("/updateCiteriaJobpositionKPI")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public CiteriaJobpositionKPI updatev(CiteriaJobpositionKPI citeriaJobpositionKPI) {
-		long test = new Long("1");
-		long id = new Long("1");
-		CiteriaJobpositionKPI criteria = new CiteriaJobpositionKPI( id, 1, id, id, 100 , 25, test);
-		return criteria;    
+	public Response updateCiteriaJobpositionKPI(CiteriaJobpositionKPI citeriaJobpositionKPI) {
+		try {
+			ResponseData response = new ResponseData();
+			Long id = citeriaJobpositionKPI.getId();
+			//check exist
+			CiteriaJobpositionKPI jobposition = configKPIDao.getIdCiteriaJobpositionKPI(id);
+			if (jobposition == null) {
+				response.setMessage("Không tồn tại tiêu chí này");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build(); 
+			}
+			if (jobposition.getCriterialId() != citeriaJobpositionKPI.getCriterialId() || jobposition.getDepartmentId() != citeriaJobpositionKPI.getDepartmentId() || jobposition.getJobPositionId() == citeriaJobpositionKPI.getJobPositionId()) {
+				response.setMessage("Không trùng khớp mã phòng ban và mã tiêu chí");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build(); 
+			}
+			// add DepartmentCriterialKPI
+			configKPIDao.updateCiteriaJobpositionKPI(citeriaJobpositionKPI);
+			CiteriaJobpositionKPI info = configKPIDao.getCiteriaJobpositionKPI(citeriaJobpositionKPI.getDepartmentId(),citeriaJobpositionKPI.getJobPositionId(),citeriaJobpositionKPI.getCriterialId());
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(info)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}
 	}
 	
 	@Path("/deleteCiteriaJobpositionKPI")
 	@GET
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateCiteriaJobpositionKPI() {
-		String test = new String("Delete success");
-		return test;    
+	public Response deleteCiteriaJobpositionKPI(@QueryParam("id") Long id) {
+		try {
+			configKPIDao.deleteCiteriaJobpositionKPI(id);
+			ResponseData response = new ResponseData();
+			response.setMessage("Xóa thành công");
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(response)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}   
 	}
 	
 	@Path("/getCiteriaProjectKPI")

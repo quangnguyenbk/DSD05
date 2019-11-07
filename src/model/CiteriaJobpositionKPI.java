@@ -9,27 +9,30 @@ public class CiteriaJobpositionKPI {
 	@Index
 	private long departmentId;
 	@Index
-	private long  jobPositionId;
+	private long jobPositionId;
 	@Index
 	private long criterialId;
 	@Index
-	private long indexAchieve;
-	@Index 
-	private long percentKPI;
+	private long indexCriteria = 0;
 	@Index
 	private long status;
+	@Index
+	long dateCreated;
+	@Index
+	long lastUpdate;
 	public CiteriaJobpositionKPI() {
 	}
 
-	public CiteriaJobpositionKPI(Long id, long departmentId, long jobPositionId, long criterialId, long indexAchieve, long percentKPI, long status) {
+	public CiteriaJobpositionKPI(Long id, long departmentId, long jobPositionId, long criterialId, long indexCriteria, long status, long dateCreated, long lastUpdate) {
 		super();
 		this.id = id;
 		this.departmentId = departmentId;
 		this.jobPositionId = jobPositionId;
 		this.criterialId = criterialId;
-		this.indexAchieve = indexAchieve;
-		this.percentKPI = percentKPI;
+		this.indexCriteria = indexCriteria;
 		this.status = status;
+		this.dateCreated = dateCreated;
+		this.lastUpdate = lastUpdate;
 	}
 
 	public Long getId() {
@@ -63,19 +66,12 @@ public class CiteriaJobpositionKPI {
 	public void setCriterialId(long criterialId) {
 		this.criterialId = criterialId;
 	}
-	public long getIndexAchieve() {
-		return indexAchieve;
+	public long getIndexCriteria() {
+		return indexCriteria;
 	}
 
-	public void setIndexAchieve(long indexAchieve) {
-		this.indexAchieve = criterialId;
-	}
-	public long getPercentKPI() {
-		return percentKPI;
-	}
-
-	public void setPercentKPI(long percentKPI) {
-		this.percentKPI = percentKPI;
+	public void setIndexCriteria(long indexCriteria) {
+		this.indexCriteria = indexCriteria;
 	}
 	public long getStatus() {
 		return status;
@@ -83,5 +79,17 @@ public class CiteriaJobpositionKPI {
 
 	public void setStatus(long status) {
 		this.status = status;
+	}
+	public long getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(long dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public long getLastUpdate() {
+		return lastUpdate;
+	}
+	public void setLastUpdate(long lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}
 }
