@@ -58,9 +58,9 @@ public class ConfigKPIService {
 					      .entity(response)
 					      .build(); 
 			}
-			//
+			//call service check permission
 			StringBuffer data = NetGet.main("http://dsd05-dot-my-test-project-252009.appspot.com/configKPI/checkUserPermission");
-			if(data.toString() != "false") {
+			if(data.toString() == "false") {
 				response.setMessage("User không có quyền thêm tiêu chí");
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -68,7 +68,7 @@ public class ConfigKPIService {
 					      .build(); 
 			}
 			StringBuffer data1 = NetGet.main("http://dsd05-dot-my-test-project-252009.appspot.com/configKPI/checkExitDepartment");
-			if(data1.toString() != "false") {
+			if(data1.toString() == "false") {
 				response.setMessage("Không có phòng ban này trong danh sách phòng ban");
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -76,7 +76,7 @@ public class ConfigKPIService {
 					      .build(); 
 			}
 			StringBuffer data2 = NetGet.main("http://dsd05-dot-my-test-project-252009.appspot.com/configKPI/checkExitCiteria");
-			if(data2.toString() != "false") {
+			if(data2.toString() == "false") {
 				response.setMessage("Không tiêu chí này trong lưới tiêu chí");
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -86,7 +86,7 @@ public class ConfigKPIService {
 			//check exist
 			DepartmentCriterialKPI department = configKPIDao.getDepartmentCriterialKPI(departmentCriterialKPI.getDepartmentId(), departmentCriterialKPI.getCriteriaId());
 			if (department != null) {
-				response.setMessage("Ä�Ă£ tá»“n táº¡i tiĂªu chĂ­ nĂ y");
+				response.setMessage("Khong ton tai tieu chi nay trong cau hinh phong ban");
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity(response)
