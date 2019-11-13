@@ -20,9 +20,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import dao.LogDao;
 import dao.UserDao;
 import model.Group;
 import model.GroupPermission;
+import model.Log;
 import model.UserInfo;
 import model.UserGroup;
 import model.UserPermission;
@@ -32,6 +34,7 @@ import utils.Config;
 @Path("/user")
 public class UserService {
 	UserDao userDao = new UserDao();
+	LogDao logDao = new LogDao();
 	@Path("/editUserInfo")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -100,12 +103,15 @@ public class UserService {
 	public Response getUserInfo(@QueryParam("id") long id){
 		try {
 			UserInfo info = userDao.getUserById(id);
+			Log log = new Log(0, "getUserInfo", "success", "lấy thông tin userId:" +info.getId(), Config.LOG_TYPE_USER);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.OK)
 				      .entity(info)
 				      .build();
 		} catch(Exception e) {
-			System.out.println(e.toString());
+			Log log = new Log(0, "getUserInfo", "error", "Không tìm thấy user", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("Không tìm thấy user")
@@ -118,9 +124,15 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addUserInfo(UserInfo user) {
-		CommonUtils.getLog().info("service addUserInfo was called  "+ user.toString() ); 
+		Log log = new Log();
+		log.setType(Config.LOG_TYPE_USER);
+		log.setAction("addUserInfo");
+		log.setUserId(user.getEmployId());
 		// check null
 		if (user.getName() == null || user.getEmail() == null ) {
+			log.setResult("error");
+			log.setContent("Thiếu tên hoặc email");
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("Thiếu tên hoặc email")
@@ -129,6 +141,9 @@ public class UserService {
 		//check mail
 		UserInfo test = userDao.getUserByEmail(user.getEmail());
 		if (test != null) {
+			log.setResult("error");
+			log.setContent("Trùng email");
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("Trùng email")
@@ -138,6 +153,9 @@ public class UserService {
 		// add user info
 		userDao.addUser(user);
 		UserInfo info = userDao.getUserByEmail(user.getEmail());
+		log.setResult("success");
+		log.setContent("Tạo thành công" + info.getId());
+		logDao.addLog(log);
 		return Response
 			      .status(Response.Status.OK)
 			      .entity(info)

@@ -18,6 +18,10 @@ public class GroupPermission {
 	@Index
 	private long groupId = Config.DEFAULT_LONG;
 	@Index
+	private long departmentId = Config.DEFAULT_LONG;
+	@Index
+	private long employId = Config.DEFAULT_LONG;
+	@Index
 	private long createdDate;
 	@Index
 	private long statusId = Config.DEFAULT_ACTIVE;
@@ -27,15 +31,19 @@ public class GroupPermission {
 	public GroupPermission() {
 	}
 
-	public GroupPermission(Long id, long roleId, long groupId, long createdDate, long statusId, long lastUpdated) {
+	
+	public GroupPermission(Long id, long permissionId, long groupId, long departmentId, long createdDate, long statusId,
+			long lastUpdated) {
 		super();
 		this.id = id;
-		this.permissionId = roleId;
+		this.permissionId = permissionId;
 		this.groupId = groupId;
+		this.departmentId = departmentId;
 		this.createdDate = createdDate;
 		this.statusId = statusId;
 		this.lastUpdated = lastUpdated;
 	}
+
 
 	public Long getId() {
 		return id;
@@ -83,6 +91,16 @@ public class GroupPermission {
 
 	public void setLastUpdated(long lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+
+
+	public long getDepartmentId() {
+		return departmentId;
+	}
+
+
+	public void setDepartmentId(long departmentId) {
+		this.departmentId = departmentId;
 	}
 
 

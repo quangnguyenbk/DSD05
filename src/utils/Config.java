@@ -15,4 +15,7 @@ public class Config {
 	public static final long DEFAULT_INACTIVE = 1;
 	
 	public static final String STRING_EMPTY ="";
+	
+	public static final int LOG_TYPE_USER = 0;
+	public static final int LOG_TYPE_KPI = 1;
 }

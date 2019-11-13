@@ -11,6 +11,7 @@ import model.CiteriaProjectKPI;
 import model.DepartmentCriterialKPI;
 import model.Group;
 import model.GroupPermission;
+import model.Log;
 import model.Permission;
 import model.UserGroup;
 import model.UserInfo;
@@ -36,6 +37,7 @@ public class MyBootstrapper implements ServletContextListener {
 		ObjectifyService.register(GroupPermission.class);
 		ObjectifyService.register(Permission.class);
 		ObjectifyService.register(UserPermission.class);
+		ObjectifyService.register(Log.class);
 		
 	}
 

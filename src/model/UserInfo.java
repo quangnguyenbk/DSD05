@@ -25,7 +25,7 @@ public class UserInfo {
 	@Index
 	String address;
 	@Index
-	long departmentId;
+	long employId;
 	@Index
 	long statusId;
 	@Index
@@ -46,7 +46,6 @@ public class UserInfo {
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.address = address;
-		this.departmentId = departmentId;
 		this.statusId = statusId;
 		this.dateCreated = dateCreated;
 		this.lastUpdate = lastUpdate;
@@ -119,6 +118,14 @@ public class UserInfo {
 
 	public void setStatusId(long statusId) {
 		this.statusId = statusId;
+	}
+
+	public long getEmployId() {
+		return employId;
+	}
+
+	public void setEmployId(long employId) {
+		this.employId = employId;
 	}
 	
 	

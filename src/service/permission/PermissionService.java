@@ -28,89 +28,6 @@ import utils.Config;
 public class PermissionService {
 	PermissionDao permissionDao = new PermissionDao();
 	
-	//group
-	@Path("/addGroup")
-	@POST
-    @Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response addGroup(Group group) {
-		// check null
-		if (group.getName() == null  ) {
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Thiếu tên group")
-				      .build();
-		}
-		
-		// add group
-		long id = permissionDao.addGroup(group);
-		Group temp = permissionDao.getGroupById(id);
-		return Response
-			      .status(Response.Status.OK)
-			      .entity(temp)
-			      .build();
-	}
-	
-	@Path("/getAllGroup")
-	@GET
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<Group> getAllUserGroup(){
-		ArrayList<Group> list = new ArrayList<Group>();
-		list.addAll(permissionDao.getAllGroup()) ;
-		return list;
-	}
-	
-	@Path("/editGroup")
-	@POST
-    @Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response editGroup(Group group) {
-		// check null
-		if (group.getId() == null || group.getName() == null ) {
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Thiếu id hoặc tên")
-				      .build();
-		}
-		
-		//check id
-		Group testId = permissionDao.getGroupById(group.getId());
-		if (testId == null ) {
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Không tìm thấy group")
-				      .build(); 
-		}
-				
-		
-		// edit group
-		permissionDao.saveGroup(group);
-		Group info = permissionDao.getGroupById(group.getId());
-		return Response
-			      .status(Response.Status.OK)
-			      .entity(info)
-			      .build();
-	}
-	
-	@Path("/getGroup")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getGroup(@QueryParam("id") long id){
-		try {
-			Group info = permissionDao.getGroupById(id);
-			return Response
-				      .status(Response.Status.OK)
-				      .entity(info)
-				      .build();
-		} catch(Exception e) {
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Không tìm thấy group")
-				      .build();
-		}
-	}
-	
 	//group permission
 	@Path("/addGroupPermission")
 	@POST
@@ -119,9 +36,7 @@ public class PermissionService {
 	public Response addGroupPermission(GroupPermission groupPermission) {
 		try {
 			Group group = permissionDao.getGroupById(groupPermission.getGroupId());
-			System.out.println(group);
 			Permission permission = permissionDao.getPermissionById(groupPermission.getPermissionId());
-			System.out.println(permission);
 			if (group == null || permission == null) {
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
