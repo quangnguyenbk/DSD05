@@ -35,12 +35,11 @@ public class PermissionService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addGroupPermission(GroupPermission groupPermission) {
 		try {
-			Group group = permissionDao.getGroupById(groupPermission.getGroupId());
 			Permission permission = permissionDao.getPermissionById(groupPermission.getPermissionId());
-			if (group == null || permission == null) {
+			if (permission == null) {
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
-					      .entity("groupId hoặc permissionId không đúng")
+					      .entity("permissionId không đúng")
 					      .build();
 			}
 			
@@ -81,77 +80,34 @@ public class PermissionService {
 		}
 	}
 	
+	@Path("/getAllGroupPermissions")
+	@GET
+	public Response getAllGroupPermissions(){
+		try {
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(permissionDao.getAllGroupPermissions())
+				      .build();
+		} catch(Exception e) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("có lỗi đã xảy ra")
+				      .build();
+		}
+	}
+	
 	@Path("/getGroupPermissions")
 	@GET
-	public Response getGroupPermissions(@QueryParam("id") long id){
+	public Response getGroupPermissions(@QueryParam("groupId") long id){
 		try {
-			ArrayList<Permission> permissions = (ArrayList<Permission>) permissionDao.getGroupPermissions(id);
 			return Response
 				      .status(Response.Status.OK)
-				      .entity(permissions)
+				      .entity(permissionDao.getGroupPermissions(id))
 				      .build();
 		} catch(Exception e) {
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("không tìm thấy Group")
-				      .build();
-		}
-	}
-	
-	// userGroup
-	@Path("/addUserToGroup")
-	@POST
-	public Response addUserToGroup(UserGroup usg) {
-		// check null
-		if (usg.getGroupId() == 0  || usg.getUserId() ==0) {
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Thiếu GroupId hoặc UserId")
-				      .build();
-		}
-		
-		// add user to group
-		try {
-			long id = permissionDao.addUserToGroup(usg);
-			return Response
-				      .status(Response.Status.OK)
-				      .entity("success")
-				      .build();
-		} catch (Exception e){
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("failed")
-				      .build();
-		}
-		
-	}
-	
-	@Path("/removeUserFromGroup")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response removeUserFromGroup(UserGroup usg) {
-		try {
-			
-			// check null
-			if (usg.getGroupId() == 0  || usg.getUserId() ==0) {
-				return Response
-					      .status(Response.Status.INTERNAL_SERVER_ERROR)
-					      .entity("Thiếu GroupId hoặc UserId")
-					      .build();
-			}
-			
-			UserGroup userGroup = permissionDao.getUserGroup(usg.getGroupId(), usg.getUserId());
-			userGroup.setStatusId(Config.DEFAULT_INACTIVE);
-			permissionDao.saveUserGroup(userGroup);
-			return Response
-				      .status(Response.Status.OK)
-				      .entity("success")
-				      .build();
-		} catch(Exception e) {
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("không tìm thấy UserGroup")
+				      .entity("có lỗi đã xảy ra")
 				      .build();
 		}
 	}
@@ -161,7 +117,7 @@ public class PermissionService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserPermission addUserPermission(UserPermission userGroupRole) {
+	public UserPermission addUserPermission(UserPermission UserPermission) {
 		long test = new Long("11");
 		UserPermission userRole = new UserPermission(test, test, test, test, test, test);
 		return userRole;
@@ -219,4 +175,46 @@ public class PermissionService {
 			      .build();
 	}
 	
+	//permission
+	@Path("/checkPermissionOfGroup")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response checkPermissionOfGroup(@QueryParam("groupId") long groupId, @QueryParam("permissionId") long permissionId){
+		try {
+			Permission permission = permissionDao.getPermissionById(permissionId);
+			if (permission == null) {
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity("không tìm thấy permisison")
+					      .build();
+			}
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(permissionDao.checkPermissionOfGroup(permissionId, groupId))
+				      .build();
+		} catch(Exception e) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("có lỗi đã xảy ra")
+				      .build();
+		}
+	}
+	
+	@Path("/getAllPermissionsOfUser")
+	@GET
+	public Response getAllPermissionsOfUser(){
+		long id = 1;
+		try {
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(permissionDao.getGroupPermissions(id))
+				      .build();
+		} catch(Exception e) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("có lỗi đã xảy ra")
+				      .build();
+		}
+	}
 }

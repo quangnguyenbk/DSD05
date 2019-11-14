@@ -16,36 +16,15 @@ public class Permission {
 	private String name;
 	@Index
 	private String url = Config.STRING_EMPTY;
-	@Index
-	private long permissionType;
-	@Index
-	private long projectId;
-	@Index
-	private long departmentId;
-	@Index
 	private String description;
 	@Index
 	private long createdDate;
 	@Index
-	private long statusId;
+	private long statusId = Config.DEFAULT_ACTIVE;
 	@Index
 	private long lastUpdated;
 	public Permission() {
 		
-	}
-	public Permission(Long id, String name, String url, long permissionType, long projectId, long departmentId,
-			String description, long createdDate, long statusId, long lastUpdated) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.url = url;
-		this.permissionType = permissionType;
-		this.projectId = projectId;
-		this.departmentId = departmentId;
-		this.description = description;
-		this.createdDate = createdDate;
-		this.statusId = statusId;
-		this.lastUpdated = lastUpdated;
 	}
 	public Long getId() {
 		return id;
@@ -64,24 +43,6 @@ public class Permission {
 	}
 	public void setUrl(String url) {
 		this.url = url;
-	}
-	public long getPermissionType() {
-		return permissionType;
-	}
-	public void setPermissionType(long permissionType) {
-		this.permissionType = permissionType;
-	}
-	public long getProjectId() {
-		return projectId;
-	}
-	public void setProjectId(long projectId) {
-		this.projectId = projectId;
-	}
-	public long getDepartmentId() {
-		return departmentId;
-	}
-	public void setDepartmentId(long departmentId) {
-		this.departmentId = departmentId;
 	}
 	public String getDescription() {
 		return description;

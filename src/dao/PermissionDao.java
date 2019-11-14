@@ -37,6 +37,13 @@ public class PermissionDao {
 	}
 	
 	//group permission
+	public boolean checkPermissionOfGroup(long permissionId, long groupId) {
+		return ofy().load().type(GroupPermission.class)
+				.filter("permissionId", permissionId)
+				.filter("groupId", groupId)
+				.filter("statusId", Config.DEFAULT_ACTIVE).list().size() > 0? true: false;
+	}
+	
 	public Long addGroupPermission(GroupPermission groupPermission) {
 		groupPermission.setCreatedDate((new Date()).getTime());
 		groupPermission.setLastUpdated((new Date()).getTime());
@@ -53,15 +60,19 @@ public class PermissionDao {
 		ofy().save().entity(groupPermission).now(); 
 	}
 	
+	public List<GroupPermission> getAllGroupPermissions() {
+		  List<GroupPermission> listGP = ofy().load().type(GroupPermission.class).filter("statusId", Config.DEFAULT_ACTIVE).list();
+		  return listGP;
+	}
+	
 	public List<Permission> getGroupPermissions(long id) {
 		  List<GroupPermission> listGP = ofy().load().type(GroupPermission.class).filter("groupId", id).filter("statusId", Config.DEFAULT_ACTIVE).list();
-		  ArrayList<Long> temp = new ArrayList<Long>();
-		  ArrayList<Permission> listPermissions = new ArrayList<Permission>();
-		  for (int i = 0 ; i< listGP.size(); i++) {
-			 temp.add(listGP.get(i).getPermissionId()); 
-			 listPermissions.add(getPermissionById(listGP.get(i).getPermissionId()));
+		  List<Permission> pers = new ArrayList<Permission>();
+		  for (int i = 0; i< listGP.size(); i++) {
+			  Permission per = getPermissionById(listGP.get(i).getPermissionId());
+			  pers.add(per);
 		  }
-		  return listPermissions;
+		  return pers;
 	}
 	
 	//permission
@@ -72,25 +83,7 @@ public class PermissionDao {
 	public long addPermission(Permission permission) {
 		permission.setCreatedDate((new Date()).getTime());
 		permission.setLastUpdated((new Date()).getTime());
-		permission.setStatusId(Config.DEFAULT_ACTIVE);
 		return ofy().save().entity(permission).now().getId(); 
 	}
 	
-	//user group
-	
-	public Long addUserToGroup(UserGroup ug) {
-		ug.setCreatedDate((new Date()).getTime());
-		ug.setLastUpdated((new Date()).getTime());
-		ug.setStatusId(Config.DEFAULT_ACTIVE);
-		return ofy().save().entity(ug).now().getId(); 
-	}
-	
-	public UserGroup getUserGroup(long groupId, long userId) {
-		return ofy().load().type(UserGroup.class).filter("groupId", groupId).filter("userId", userId).filter("statusId", Config.DEFAULT_ACTIVE).list().get(0);
-	}
-	
-	public void saveUserGroup(UserGroup userGroup) {
-		userGroup.setLastUpdated((new Date()).getTime());
-		ofy().save().entity(userGroup).now(); 
-	}
 }
