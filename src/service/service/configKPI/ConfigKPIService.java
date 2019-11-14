@@ -13,15 +13,22 @@ import javax.ws.rs.core.Response;
 
 import CallService.NetGet;
 import dao.ConfigKPIDao;
+import dao.LogDao;
+import dao.UserDao;
 import model.CiteriaJobpositionKPI;
 import model.CiteriaProjectKPI;
+import model.CiterialKPI;
+import model.DataConfigKPI;
 import model.DepartmentCriterialKPI;
+import model.Log;
 import model.ResponseData;
+import utils.Config;
 
 
 
 @Path("/configKPI")
 public class ConfigKPIService {
+	LogDao logDao = new LogDao();
 	ConfigKPIDao configKPIDao = new ConfigKPIDao();
 	@Path("/getDepartmentCriterialKPI")
 	@GET
@@ -399,4 +406,156 @@ public class ConfigKPIService {
 				      .build();
 		}   
 	}
+	
+	@Path("/configKPIDepartment")
+	@POST
+    @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response configKPIDepartment(DataConfigKPI dataConfigKPI) {
+		try {
+			ResponseData response = new ResponseData();
+			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getUserId() == 0 || dataConfigKPI.getCriterias() == null) {
+				response.setMessage("Thiêu dữ liệu");
+				return Response
+					      .status(Response.Status.OK)
+					      .entity(response)
+					      .build();
+			}
+			ArrayList<CiterialKPI> array = dataConfigKPI.getCriterias();
+			float i = (float) 0;
+			for (int counter = 0; counter < array.size(); counter++) { 	
+				CiterialKPI citerialKPI = array.get(counter);	
+				if(0 > citerialKPI.getRatio() || citerialKPI.getRatio() > 1) {
+					response.setMessage("chỉ số đánh giá tiêu chí phải nằm trong khoảng 0 đến 1");
+					return Response
+						      .status(Response.Status.OK)
+						      .entity(response)
+						      .build();
+				}
+				i = i + citerialKPI.getRatio();
+			}
+			if(0.99 > i || i > 1.01) {
+				response.setMessage("Tổng phần trăm các tiêu chí phải bằng 1");
+				return Response
+					      .status(Response.Status.OK)
+					      .entity(response)
+					      .build();
+			}
+			Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+			logDao.addLog(log);
+			response.setMessage("Cấu hình tiêu chí thành công");
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(response)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}
+	}
+	
+	@Path("/configKPIJobPosition")
+	@POST
+    @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response configKPIJobPosition(DataConfigKPI dataConfigKPI) {
+		try {
+			ResponseData response = new ResponseData();
+			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getUserId() == 0 || dataConfigKPI.getCriterias() == null) {
+				response.setMessage("Thiêu dữ liệu");
+				return Response
+					      .status(Response.Status.OK)
+					      .entity(response)
+					      .build();
+			}
+			ArrayList<CiterialKPI> array = dataConfigKPI.getCriterias();
+			float i = (float) 0;
+			for (int counter = 0; counter < array.size(); counter++) { 	
+				CiterialKPI citerialKPI = array.get(counter);	
+				if(0 > citerialKPI.getRatio() || citerialKPI.getRatio() > 1) {
+					response.setMessage("chỉ số đánh giá tiêu chí phải nằm trong khoảng 0 đến 1");
+					return Response
+						      .status(Response.Status.OK)
+						      .entity(response)
+						      .build();
+				}
+				i = i + citerialKPI.getRatio();
+			}
+			if(0.99 > i || i > 1.01) {
+				response.setMessage("Tổng phần trăm các tiêu chí phải bằng 1");
+				return Response
+					      .status(Response.Status.OK)
+					      .entity(response)
+					      .build();
+			}
+			Log log = new Log(dataConfigKPI.getUserId(), "configKPIJobPosition", "success", "Cấu hình lưới tiêu chí vị trí công việc", Config.LOG_TYPE_KPI);
+			logDao.addLog(log);
+			response.setMessage("Cấu hình tiêu chí thành công");
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(response)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}
+	}
+	
+	@Path("/configKPIProject")
+	@POST
+    @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response configKPIProject(DataConfigKPI dataConfigKPI) {
+		try {
+			ResponseData response = new ResponseData();
+			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getUserId() == 0 || dataConfigKPI.getCriterias() == null) {
+				response.setMessage("Thiêu dữ liệu");
+				return Response
+					      .status(Response.Status.OK)
+					      .entity(response)
+					      .build();
+			}
+			ArrayList<CiterialKPI> array = dataConfigKPI.getCriterias();
+			float i = (float) 0;
+			for (int counter = 0; counter < array.size(); counter++) { 	
+				CiterialKPI citerialKPI = array.get(counter);	
+				if(0 > citerialKPI.getRatio() || citerialKPI.getRatio() > 1) {
+					response.setMessage("chỉ số đánh giá tiêu chí phải nằm trong khoảng 0 đến 1");
+					return Response
+						      .status(Response.Status.OK)
+						      .entity(response)
+						      .build();
+				}
+				i = i + citerialKPI.getRatio();
+			}
+			if(0.99 > i || i > 1.01) {
+				response.setMessage("Tổng phần trăm các tiêu chí phải bằng 1");
+				return Response
+					      .status(Response.Status.OK)
+					      .entity(response)
+					      .build();
+			}
+			Log log = new Log(dataConfigKPI.getUserId(), "configKPIProject", "success", "Cấu hình lưới tiêu chí vị trí dự án", Config.LOG_TYPE_KPI);
+			logDao.addLog(log);
+			response.setMessage("Cấu hình tiêu chí thành công");
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(response)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}
+	}
 }
+
+
