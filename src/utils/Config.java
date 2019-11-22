@@ -18,4 +18,7 @@ public class Config {
 	
 	public static final int LOG_TYPE_USER = 0;
 	public static final int LOG_TYPE_KPI = 1;
+	
+	//link
+	public static final String API_LIST_ALL ="https://dsd15-department.azurewebsites.net/Members/";
 }

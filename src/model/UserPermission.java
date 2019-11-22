@@ -6,30 +6,32 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+import utils.Config;
+
 @Entity
 @XmlRootElement
 public class UserPermission {
 	@Id
 	private Long id;
 	@Index
-	private long roleId;
+	private long permissionId;
 	@Index
 	private long userId;
 	@Index
 	private long createdDate;
 	@Index
-	private long statusId;
+	private long statusId = Config.DEFAULT_ACTIVE;
 	@Index
 	private long lastUpdated;
 	
 	public UserPermission() {
 	}
 
-	public UserPermission(Long id, long roleId, long groupId, long createdDate, long statusId, long lastUpdated) {
+	public UserPermission(Long id, long permissionId, long userId, long createdDate, long statusId, long lastUpdated) {
 		super();
 		this.id = id;
-		this.roleId = roleId;
-		this.userId = groupId;
+		this.permissionId = permissionId;
+		this.userId = userId;
 		this.createdDate = createdDate;
 		this.statusId = statusId;
 		this.lastUpdated = lastUpdated;
@@ -43,20 +45,20 @@ public class UserPermission {
 		this.id = id;
 	}
 
-	public long getRoleId() {
-		return roleId;
+	public long getPermissionId() {
+		return permissionId;
 	}
 
-	public void setRoleId(long roleId) {
-		this.roleId = roleId;
+	public void setPermissionId(long permissionId) {
+		this.permissionId = permissionId;
 	}
 
-	public long getGroupId() {
+	public long getUserId() {
 		return userId;
 	}
 
-	public void setGroupId(long groupId) {
-		this.userId = groupId;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public long getCreatedDate() {
@@ -82,6 +84,7 @@ public class UserPermission {
 	public void setLastUpdated(long lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
+
 
 
 }
