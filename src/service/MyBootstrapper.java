@@ -6,13 +6,15 @@ import javax.servlet.ServletContextListener;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 
+import dao.PermissionDao;
 import model.CiteriaJobpositionKPI;
 import model.CiteriaProjectKPI;
 import model.DepartmentCriterialKPI;
-import model.Group;
 import model.GroupPermission;
 import model.Log;
 import model.Permission;
+import model.Module;
+import model.ModuleDepartment;
 import model.UserGroup;
 import model.UserInfo;
 import model.UserPermission;
@@ -32,12 +34,13 @@ public class MyBootstrapper implements ServletContextListener {
 		ObjectifyService.register(CiteriaJobpositionKPI.class);
 		ObjectifyService.register(CiteriaProjectKPI.class);
 		ObjectifyService.register(UserInfo.class);
-		ObjectifyService.register(Group.class);
 		ObjectifyService.register(UserGroup.class);
 		ObjectifyService.register(GroupPermission.class);
 		ObjectifyService.register(Permission.class);
 		ObjectifyService.register(UserPermission.class);
 		ObjectifyService.register(Log.class);
+		ObjectifyService.register(Module.class);
+		ObjectifyService.register(ModuleDepartment.class);
 		
 	}
 

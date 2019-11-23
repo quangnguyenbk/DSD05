@@ -18,9 +18,10 @@ import javax.ws.rs.core.Response;
 
 import dao.PermissionDao;
 import dao.UserDao;
-import model.Group;
 import model.GroupPermission;
 import model.Permission;
+import model.Module;
+import model.ModuleDepartment;
 import model.UserGroup;
 import model.UserInfo;
 import model.UserPermission;
@@ -265,6 +266,12 @@ public class PermissionService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addPermission(Permission permission){
+		if (permission.getModuleId() == 0) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("thiếu ruleId")
+				      .build();
+		}
 		//add permission
 		long id = permissionDao.addPermission(permission);
 		Permission temp = permissionDao.getPermissionById(id);
@@ -337,4 +344,6 @@ public class PermissionService {
 				      .build();
 		}
 	}
+	
+
 }

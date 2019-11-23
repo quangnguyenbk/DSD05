@@ -22,7 +22,6 @@ import javax.ws.rs.core.UriInfo;
 
 import dao.LogDao;
 import dao.UserDao;
-import model.Group;
 import model.GroupPermission;
 import model.Log;
 import model.UserInfo;

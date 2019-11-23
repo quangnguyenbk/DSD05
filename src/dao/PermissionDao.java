@@ -14,9 +14,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import CallService.NetGet;
-import model.Group;
 import model.GroupPermission;
 import model.Permission;
+import model.Module;
+import model.ModuleDepartment;
 import model.UserGroup;
 import model.UserInfo;
 import model.UserPermission;
@@ -26,16 +27,6 @@ import utils.RequestGet;
 public class PermissionDao {
 	Logger log = Logger.getLogger("test");
 	//group
-	public Long addGroup(Group group) {
-		group.setCreatedDate((new Date()).getTime());
-		group.setLastUpdated((new Date()).getTime());
-		group.setStatusId(Config.USER_ACTIVE);
-		return ofy().save().entity(group).now().getId(); 
-	}
-	
-	public Group getGroupById(long id) {
-		return ofy().load().type(Group.class).id(id).now(); 
-	}
 	
 	public List<String> getAllGroup(){
 		List<String> ids = new ArrayList<String>();
@@ -63,10 +54,6 @@ public class PermissionDao {
 		return  ids;
 	}
 	
-	public void saveGroup(Group group) {
-		group.setLastUpdated((new Date()).getTime());
-		ofy().save().entity(group).now(); 
-	}
 	
 	//group permission
 	public boolean checkPermissionOfGroup(long permissionId, long groupId) {
@@ -112,6 +99,10 @@ public class PermissionDao {
 		return ofy().load().type(Permission.class).id(id).now(); 
 	}
 	
+	public List<Permission> getPermissionByModuleId(long moduleId) {
+		return ofy().load().type(Permission.class).filter("moduleId", moduleId).list(); 
+	}
+	
 	public long addPermission(Permission permission) {
 		permission.setCreatedDate((new Date()).getTime());
 		permission.setLastUpdated((new Date()).getTime());
@@ -145,4 +136,46 @@ public class PermissionDao {
 		  }
 		  return pers;
 	}
+	
+	//module
+	public Module getModuleById(long id) {
+		return ofy().load().type(Module.class).id(id).now(); 
+	}
+	
+	public long addModule(Module module) {
+		module.setCreatedDate((new Date()).getTime());
+		module.setLastUpdated((new Date()).getTime());
+		return ofy().save().entity(module).now().getId(); 
+	}
+	
+	public long saveModule(Module module) {
+		module.setLastUpdated((new Date()).getTime());
+		return ofy().save().entity(module).now().getId(); 
+	}
+	
+	public List<Module> getAllModules() {
+		return ofy().load().type(Module.class).list();
+	}
+	
+	public long addModuleDepartment(ModuleDepartment module) {
+		module.setCreatedDate((new Date()).getTime());
+		module.setLastUpdated((new Date()).getTime());
+		return ofy().save().entity(module).now().getId(); 
+	}
+	
+	public void deleteModuleDepartment(ModuleDepartment module) {
+		List<ModuleDepartment> us =ofy().load().type(ModuleDepartment.class).filter("moduleId", module.getModuleId()).filter("departmentId", module.getDepartmentId()).list();
+		ofy().delete().entities(us);
+	}
+	
+	public List<Module> getDepartmentModules(long departmentId){
+		List<ModuleDepartment> listRD = ofy().load().type(ModuleDepartment.class).filter("departmentId", departmentId).list();
+		List<Module> result = new ArrayList<Module>();
+		  for (int i = 0; i< listRD.size(); i++) {
+			  Module module = getModuleById(listRD.get(i).getModuleId());
+			  result.add(module);
+		  }
+		  return result;
+	}
+	
 }
