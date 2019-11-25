@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 
 import utils.Config;
@@ -31,6 +32,9 @@ public class Permission {
 	private long statusId = Config.DEFAULT_ACTIVE;
 	@Index
 	private long lastUpdated;
+	
+	@Ignore
+	private long groupId = Config.DEFAULT_LONG;
 	public Permission() {
 		
 	}
@@ -75,6 +79,12 @@ public class Permission {
 	}
 	public void setLastUpdated(long lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+	public long getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
 	}
 	
 	

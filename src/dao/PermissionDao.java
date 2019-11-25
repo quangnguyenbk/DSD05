@@ -28,24 +28,23 @@ public class PermissionDao {
 	Logger log = Logger.getLogger("test");
 	//group
 	
-	public List<String> getAllGroup(){
-		List<String> ids = new ArrayList<String>();
+	public List<Long> getAllGroup(){
+		List<Long> ids = new ArrayList<Long>();
 		//
 		try {
 			StringBuffer response = RequestGet.send(Config.API_LIST_ALL);
-			for (int i = 0; i< 10; i++) {
-				if (response == null)
-					response = RequestGet.send(Config.API_LIST_ALL);
-				else break;
-			}
+//			for (int i = 0; i< 10; i++) {
+//				if (response == null)
+//					response = RequestGet.send(Config.API_LIST_ALL);
+//				else break;
+//			}
 			log.warning("reponse:" + response.toString());
 			JSONArray obj = (JSONArray)new JSONParser().parse(response.toString());
 			JSONArray array = (JSONArray) obj;
 			for (int i = 0 ; i< array.size(); i++) {
 				JSONObject ob = (JSONObject) array.get(i);
-				if (ob.containsKey("_id")) {
-//					ids.add(Long.valueOf((String)ob.get("_id")));
-					ids.add(((String)ob.get("_id")));
+				if (ob.containsKey("id")) {
+					ids.add(Long.valueOf((Long)ob.get("id")));
 				}
 			}
 		} catch (Exception e) {
@@ -89,7 +88,8 @@ public class PermissionDao {
 		  List<Permission> pers = new ArrayList<Permission>();
 		  for (int i = 0; i< listGP.size(); i++) {
 			  Permission per = getPermissionById(listGP.get(i).getPermissionId());
-			  pers.add(per);
+			  if (per != null)
+				  pers.add(per);
 		  }
 		  return pers;
 	}
@@ -109,6 +109,11 @@ public class PermissionDao {
 		return ofy().save().entity(permission).now().getId(); 
 	}
 	
+	public List<Permission> getAllPermissions(long moduleId){
+		if (moduleId !=0) 
+			return getPermissionByModuleId(moduleId);
+		return ofy().load().type(Permission.class).list(); 
+	}
 	
 	//user permisson
 	public Long addUserPermission(UserPermission userPermission) {

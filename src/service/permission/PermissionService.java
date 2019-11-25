@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -31,6 +32,7 @@ import utils.Config;
 public class PermissionService {
 	PermissionDao permissionDao = new PermissionDao();
 	UserDao userDao = new UserDao();
+	Logger log = Logger.getLogger("abc");
 	//group permission
 	@Path("/addGroupPermission")
 	@POST
@@ -130,20 +132,27 @@ public class PermissionService {
 					      .build();
 			}
 		}
-		Map<String, List<Permission>> result = new HashMap<String, List<Permission>>();
+		try {
+		List<Permission> result = new ArrayList<Permission>();
 		if (ids.size()> 0) {
 			for (int i = 0 ; i< ids.size(); i++) {
 				List<Permission> permissions = permissionDao.getGroupPermissions(ids.get(i));
-				result.put(ids.get(i) +"", permissions);
+				if (permissions.size()> 0 ) {
+					for (int j = 0 ; j < permissions.size(); j++) {
+						permissions.get(j).setGroupId(ids.get(i));
+					}
+					result.addAll(permissions);
+				}
 			}
 		}
 		
-		try {
+		
 			return Response
 				      .status(Response.Status.OK)
 				      .entity((result))
 				      .build();
 		} catch(Exception e) {
+			log.warning(e.getMessage());
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("có lỗi đã xảy ra")
@@ -345,5 +354,19 @@ public class PermissionService {
 		}
 	}
 	
-
+	@Path("/getAllPermissions")
+	@GET
+	public Response getAllPermissions(@QueryParam("moduleId") long moduleId){
+		try {
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(permissionDao.getAllPermissions(moduleId))
+				      .build();
+		} catch(Exception e) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("có lỗi đã xảy ra")
+				      .build();
+		}
+	}
 }

@@ -20,6 +20,6 @@ public class Config {
 	public static final int LOG_TYPE_KPI = 1;
 	
 	//link
-	public static final String API_LIST_ALL ="https://dsd15-department.azurewebsites.net/Members/";
 	public static final String API_UPDATE_KPI ="http://206.189.34.124:5000/api/group8/kpis/";
+	public static final String API_LIST_ALL ="http://18.217.21.235:8083/api/v1/position/listAll";
 }
