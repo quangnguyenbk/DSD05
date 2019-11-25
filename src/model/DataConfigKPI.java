@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.googlecode.objectify.annotation.Entity;
@@ -50,5 +51,9 @@ public class DataConfigKPI {
 	
 	public ArrayList<CiterialKPI> getCriterias() {
 		return criterias;
+	}
+	
+	public String getStringDataConfigKPI() {
+		 return "{\"criterias\":"+ this.criterias + "}";
 	}
 }

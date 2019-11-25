@@ -21,4 +21,5 @@ public class Config {
 	
 	//link
 	public static final String API_LIST_ALL ="https://dsd15-department.azurewebsites.net/Members/";
+	public static final String API_UPDATE_KPI ="http://206.189.34.124:5000/api/group8/kpis/";
 }

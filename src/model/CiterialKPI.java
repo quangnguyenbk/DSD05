@@ -60,5 +60,6 @@ public class CiterialKPI {
 	public String getNote() {
 		return note;
 	}
+	
 
 }

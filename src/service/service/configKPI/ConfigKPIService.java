@@ -23,6 +23,8 @@ import model.DepartmentCriterialKPI;
 import model.Log;
 import model.ResponseData;
 import utils.Config;
+import utils.RequestGet;
+import utils.RequestPut;
 
 
 
@@ -441,6 +443,13 @@ public class ConfigKPIService {
 					      .entity(response)
 					      .build();
 			}
+			String data = dataConfigKPI.getStringDataConfigKPI();
+			long id = dataConfigKPI.getId();
+			String url = Config.API_UPDATE_KPI + String.valueOf(id);
+			System.out.println( url);
+			System.out.println( data);
+			String response1 = RequestPut.send(url, data);
+			System.out.println( response1);
 			Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
 			logDao.addLog(log);
 			response.setMessage("Cấu hình tiêu chí thành công");
