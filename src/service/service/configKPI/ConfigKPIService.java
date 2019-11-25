@@ -1,5 +1,6 @@
 package service.service.configKPI;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
@@ -10,6 +11,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import CallService.NetGet;
 import dao.ConfigKPIDao;
@@ -32,6 +35,7 @@ import utils.RequestPut;
 public class ConfigKPIService {
 	LogDao logDao = new LogDao();
 	ConfigKPIDao configKPIDao = new ConfigKPIDao();
+	ObjectMapper mapper = new ObjectMapper();
 //	@Path("/getDepartmentCriterialKPI")
 //	@GET
 //	@Consumes(MediaType.APPLICATION_JSON)
@@ -412,7 +416,7 @@ public class ConfigKPIService {
 	@Path("/configKPIDepartment")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
 	public Response configKPIDepartment(DataConfigKPI dataConfigKPI) {
 		try {
 			ResponseData response = new ResponseData();
@@ -443,7 +447,13 @@ public class ConfigKPIService {
 					      .entity(response)
 					      .build();
 			}
-			String data = dataConfigKPI.getStringDataConfigKPI();
+			String data ="";
+			try {
+			    data = mapper.writeValueAsString(dataConfigKPI);
+			    System.out.println(data);
+			} catch (IOException e) {
+			    e.printStackTrace();
+			}
 			long id = dataConfigKPI.getId();
 			String url = Config.API_UPDATE_KPI + String.valueOf(id);
 			System.out.println( url);
@@ -455,7 +465,7 @@ public class ConfigKPIService {
 			response.setMessage("Cấu hình tiêu chí thành công");
 			return Response
 				      .status(Response.Status.OK)
-				      .entity(response)
+				      .entity(data)
 				      .build();
 		} catch(Exception e) {
 			System.out.println(e.toString());

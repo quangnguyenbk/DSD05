@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -53,7 +54,12 @@ public class DataConfigKPI {
 		return criterias;
 	}
 	
-	public String getStringDataConfigKPI() {
-		 return "{\"criterias\":"+ this.criterias + "}";
-	}
+	@Override
+    public String toString() {
+        return "DataConfigKPI{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", criterias=" + Arrays.toString(criterias.toArray()) +
+                '}';
+    }
 }

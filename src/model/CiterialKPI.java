@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Arrays;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.googlecode.objectify.annotation.Entity;
@@ -61,5 +63,14 @@ public class CiterialKPI {
 		return note;
 	}
 	
+	@Override
+    public String toString() {
+        return "CiterialKPI{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", ratio=" + ratio +
+                ", name='" + note + '\'' +
+                '}';
+    }
 
 }
