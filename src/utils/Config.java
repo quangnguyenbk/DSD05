@@ -21,5 +21,10 @@ public class Config {
 	
 	//link
 	public static final String API_UPDATE_KPI ="http://206.189.34.124:5000/api/group8/kpis/";
+	
 	public static final String API_LIST_ALL ="http://18.217.21.235:8083/api/v1/position/listAll";
+	
+	public static final String GET_DEPARTMENT_API ="http://18.217.21.235:8083/api/v1/position/listAll";
+	
+	public static final String GET_ALL_POSITION = "http://18.217.21.235:8083/api/v1/position/listAll";
 }

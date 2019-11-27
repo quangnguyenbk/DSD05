@@ -20,7 +20,7 @@ public class Permission {
 	@Id
 	private Long id;
 	@Index
-	private String name;
+	private String name = Config.STRING_EMPTY;
 	@Index
 	private String url = Config.STRING_EMPTY;
 	@Index

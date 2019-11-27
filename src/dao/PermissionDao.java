@@ -73,6 +73,12 @@ public class PermissionDao {
 		return ofy().load().type(GroupPermission.class).id(id).now(); 
 	}
 	
+	public List<GroupPermission> getGroupPermission(long groupId, long permissionId) {
+		return ofy().load().type(GroupPermission.class).filter("groupId", groupId).filter("permissionId", permissionId).list(); 
+	}
+	public void deleteGroupPermission(List<GroupPermission> groupPermissions) {
+		ofy().delete().entities(groupPermissions);
+	}
 	public void saveGroupPermission(GroupPermission groupPermission) {
 		groupPermission.setLastUpdated((new Date()).getTime());
 		ofy().save().entity(groupPermission).now(); 
@@ -103,8 +109,11 @@ public class PermissionDao {
 		return ofy().load().type(Permission.class).filter("moduleId", moduleId).list(); 
 	}
 	
+	public List<Permission> getPermissionByName(String name) {
+		return ofy().load().type(Permission.class).filter("name", name).list(); 
+	}
+	
 	public long addPermission(Permission permission) {
-		permission.setCreatedDate((new Date()).getTime());
 		permission.setLastUpdated((new Date()).getTime());
 		return ofy().save().entity(permission).now().getId(); 
 	}
@@ -183,4 +192,35 @@ public class PermissionDao {
 		  return result;
 	}
 	
+	// call another api
+	public List<Long> getDepartment(long groupId){
+		List<Long> ids = new ArrayList<Long>();
+		//
+		try {
+			StringBuffer response = RequestGet.send(Config.GET_ALL_POSITION);
+			log.warning("reponse:" + response.toString());
+			JSONArray obj = (JSONArray)new JSONParser().parse(response.toString());
+			JSONArray array = (JSONArray) obj;
+			for (int i = 0 ; i< array.size(); i++) {
+				JSONObject ob = (JSONObject) array.get(i);
+				if (ob.containsKey("id")) {
+					if (Long.valueOf((Long)ob.get("id")) == groupId) {
+						ids.add(Long.valueOf((Long)ob.get("organizationId")));
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.warning(e.getLocalizedMessage());
+		}
+		return  ids;
+	}
+	
+	public List<Permission> getDepartmentPermissions(long departmentId) {
+		List<Module> modules = getDepartmentModules(departmentId);
+		List<Permission> permissions = new ArrayList<Permission>();
+		for (int i = 0 ; i < modules.size() ; i++) {
+			permissions.addAll(getPermissionByModuleId(modules.get(i).getId()));
+		}
+		return permissions;
+	}
 }
