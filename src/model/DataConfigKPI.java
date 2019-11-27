@@ -58,7 +58,6 @@ public class DataConfigKPI {
     public String toString() {
         return "DataConfigKPI{" +
                 "id=" + id +
-                ", userId='" + userId + '\'' +
                 ", criterias=" + Arrays.toString(criterias.toArray()) +
                 '}';
     }

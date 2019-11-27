@@ -420,7 +420,7 @@ public class ConfigKPIService {
 	public Response configKPIDepartment(DataConfigKPI dataConfigKPI) {
 		try {
 			ResponseData response = new ResponseData();
-			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getUserId() == 0 || dataConfigKPI.getCriterias() == null) {
+			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getCriterias() == null) {
 				response.setMessage("Thiêu dữ liệu");
 				return Response
 					      .status(Response.Status.OK)
@@ -456,16 +456,21 @@ public class ConfigKPIService {
 			}
 			long id = dataConfigKPI.getId();
 			String url = Config.API_UPDATE_KPI + String.valueOf(id);
-			System.out.println( url);
-			System.out.println( data);
 			String response1 = RequestPut.send(url, data);
-			System.out.println( response1);
-			Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
-			logDao.addLog(log);
-			response.setMessage("Cấu hình tiêu chí thành công");
+			if(response1 != null) {
+				response.setData(response1);
+				response.setMessage("Cấu hình tiêu chí thành công");
+				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
+			} else {
+				response.setData(null);
+				response.setMessage("Cấu hình tiêu chí thất bại");
+				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
+			}
 			return Response
 				      .status(Response.Status.OK)
-				      .entity(data)
+				      .entity(response)
 				      .build();
 		} catch(Exception e) {
 			System.out.println(e.toString());
@@ -483,7 +488,7 @@ public class ConfigKPIService {
 	public Response configKPIJobPosition(DataConfigKPI dataConfigKPI) {
 		try {
 			ResponseData response = new ResponseData();
-			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getUserId() == 0 || dataConfigKPI.getCriterias() == null) {
+			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getCriterias() == null) {
 				response.setMessage("Thiêu dữ liệu");
 				return Response
 					      .status(Response.Status.OK)
@@ -510,9 +515,27 @@ public class ConfigKPIService {
 					      .entity(response)
 					      .build();
 			}
-			Log log = new Log(dataConfigKPI.getUserId(), "configKPIJobPosition", "success", "Cấu hình lưới tiêu chí vị trí công việc", Config.LOG_TYPE_KPI);
-			logDao.addLog(log);
-			response.setMessage("Cấu hình tiêu chí thành công");
+			String data ="";
+			try {
+			    data = mapper.writeValueAsString(dataConfigKPI);
+			    System.out.println(data);
+			} catch (IOException e) {
+			    e.printStackTrace();
+			}
+			long id = dataConfigKPI.getId();
+			String url = Config.API_UPDATE_KPI + String.valueOf(id);
+			String response1 = RequestPut.send(url, data);
+			if(response1 != null) {
+				response.setData(response1);
+				response.setMessage("Cấu hình tiêu chí thành công");
+				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
+			} else {
+				response.setData(null);
+				response.setMessage("Cấu hình tiêu chí thất bại");
+				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
+			}
 			return Response
 				      .status(Response.Status.OK)
 				      .entity(response)
@@ -533,7 +556,7 @@ public class ConfigKPIService {
 	public Response configKPIProject(DataConfigKPI dataConfigKPI) {
 		try {
 			ResponseData response = new ResponseData();
-			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getUserId() == 0 || dataConfigKPI.getCriterias() == null) {
+			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getCriterias() == null) {
 				response.setMessage("Thiêu dữ liệu");
 				return Response
 					      .status(Response.Status.OK)
@@ -560,9 +583,27 @@ public class ConfigKPIService {
 					      .entity(response)
 					      .build();
 			}
-			Log log = new Log(dataConfigKPI.getUserId(), "configKPIProject", "success", "Cấu hình lưới tiêu chí vị trí dự án", Config.LOG_TYPE_KPI);
-			logDao.addLog(log);
-			response.setMessage("Cấu hình tiêu chí thành công");
+			String data ="";
+			try {
+			    data = mapper.writeValueAsString(dataConfigKPI);
+			    System.out.println(data);
+			} catch (IOException e) {
+			    e.printStackTrace();
+			}
+			long id = dataConfigKPI.getId();
+			String url = Config.API_UPDATE_KPI + String.valueOf(id);
+			String response1 = RequestPut.send(url, data);
+			if(response1 != null) {
+				response.setData(response1);
+				response.setMessage("Cấu hình tiêu chí thành công");
+				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
+			} else {
+				response.setData(null);
+				response.setMessage("Cấu hình tiêu chí thất bại");
+				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
+			}
 			return Response
 				      .status(Response.Status.OK)
 				      .entity(response)
