@@ -41,6 +41,8 @@ public class UserService {
 	public Response editUserInfo(UserInfo user) {
 		// check null
 		if (user.getId() == null || user.getName() == null || user.getEmail() == null ) {
+			Log log = new Log(0, "editUserInfo", "error", "thiếu id, name hoặc email của user", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("Thiếu id, tên hoặc email")
@@ -50,6 +52,8 @@ public class UserService {
 		//check id
 		UserInfo testId = userDao.getUserById(user.getId());
 		if (testId == null ) {
+			Log log = new Log(0, "editUserInfo", "error", "không tìm thấy user", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("Không tìm thấy user")
@@ -59,15 +63,19 @@ public class UserService {
 		//check mail
 		UserInfo test = userDao.getUserByEmail(user.getEmail());
 		if (test != null && !test.getId().equals(user.getId())) {
+			Log log = new Log(0, "editUserInfo", "error", "email không tồn tại", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Trùng email")
+				      .entity("Trắng email")
 				      .build(); 
 		}
 		
 		// edit user info
 		userDao.saveUser(user);
 		UserInfo info = userDao.getUserById(user.getId());
+		Log log = new Log(0, "editUserInfo", "error", "cập nhật user thành công", Config.LOG_TYPE_USER);
+		logDao.addLog(log);
 		return Response
 			      .status(Response.Status.OK)
 			      .entity(info)
@@ -83,12 +91,16 @@ public class UserService {
 			UserInfo info = userDao.getUserById(user.getId());
 			info.setStatusId(Config.USER_INACTIVE);
 			userDao.saveUser(info);
+			Log log = new Log(0, "removeUserInfo", "success", "xóa user thành công", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.OK)
 				      .entity("success")
 				      .build();
 		} catch(Exception e) {
 			System.out.println(e.toString());
+			Log log = new Log(0, "removeUserInfo", "error", "xóa user thất bại", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("failed")
@@ -141,11 +153,11 @@ public class UserService {
 		UserInfo test = userDao.getUserByEmail(user.getEmail());
 		if (test != null) {
 			log.setResult("error");
-			log.setContent("Trùng email");
+			log.setContent("Trắng email");
 			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Trùng email")
+				      .entity("Trắng email")
 				      .build(); 
 		}
 		
@@ -169,6 +181,8 @@ public class UserService {
 	    CommonUtils.getLog().info("service getUserInfos was called by " + uriDetails.getAbsolutePath());  
 		ArrayList<UserInfo> listInfo = new ArrayList<UserInfo>();
 		listInfo.addAll(userDao.getUserInfos());
+		Log log = new Log(0, "getUserInfos", "success", "Lấy thành công danh sách users", Config.LOG_TYPE_USER);
+		logDao.addLog(log);
 		return listInfo;
 	}
 	

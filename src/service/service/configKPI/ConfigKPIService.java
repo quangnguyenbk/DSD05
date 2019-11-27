@@ -422,6 +422,8 @@ public class ConfigKPIService {
 			ResponseData response = new ResponseData();
 			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getCriterias() == null) {
 				response.setMessage("Thiêu dữ liệu");
+				Log log = new Log(0, "configKPIDepartment", "failed", "Thiếu dữ liệu", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
 				return Response
 					      .status(Response.Status.OK)
 					      .entity(response)
@@ -433,6 +435,8 @@ public class ConfigKPIService {
 				CiterialKPI citerialKPI = array.get(counter);	
 				if(0 > citerialKPI.getRatio() || citerialKPI.getRatio() > 1) {
 					response.setMessage("chỉ số đánh giá tiêu chí phải nằm trong khoảng 0 đến 1");
+					Log log = new Log(0, "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí không nằm trong khoảng 0 đến 1", Config.LOG_TYPE_KPI);
+					logDao.addLog(log);
 					return Response
 						      .status(Response.Status.OK)
 						      .entity(response)
@@ -442,6 +446,8 @@ public class ConfigKPIService {
 			}
 			if(0.99 > i || i > 1.01) {
 				response.setMessage("Tổng phần trăm các tiêu chí phải bằng 1");
+				Log log = new Log(0, "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí không đạt 100%", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
 				return Response
 					      .status(Response.Status.OK)
 					      .entity(response)
@@ -460,12 +466,12 @@ public class ConfigKPIService {
 			if(response1 != null) {
 				response.setData(response1);
 				response.setMessage("Cấu hình tiêu chí thành công");
-				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				Log log = new Log(0, "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
 			} else {
 				response.setData(null);
 				response.setMessage("Cấu hình tiêu chí thất bại");
-				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				Log log = new Log(0, "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
 			}
 			return Response
@@ -474,6 +480,8 @@ public class ConfigKPIService {
 				      .build();
 		} catch(Exception e) {
 			System.out.println(e.toString());
+			Log log = new Log(0, "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí phòng ban thất bại", Config.LOG_TYPE_KPI);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("get failed")
@@ -490,6 +498,8 @@ public class ConfigKPIService {
 			ResponseData response = new ResponseData();
 			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getCriterias() == null) {
 				response.setMessage("Thiêu dữ liệu");
+				Log log = new Log(0, "configKPIJobPosition", "failed", "Thiếu dữ liệu", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
 				return Response
 					      .status(Response.Status.OK)
 					      .entity(response)
@@ -501,6 +511,8 @@ public class ConfigKPIService {
 				CiterialKPI citerialKPI = array.get(counter);	
 				if(0 > citerialKPI.getRatio() || citerialKPI.getRatio() > 1) {
 					response.setMessage("chỉ số đánh giá tiêu chí phải nằm trong khoảng 0 đến 1");
+					Log log = new Log(0, "configKPIJobPosition", "failed", "Cấu hình lưới tiêu chí không nằm trong khoảng 0 đến 1", Config.LOG_TYPE_KPI);
+					logDao.addLog(log);
 					return Response
 						      .status(Response.Status.OK)
 						      .entity(response)
@@ -510,6 +522,8 @@ public class ConfigKPIService {
 			}
 			if(0.99 > i || i > 1.01) {
 				response.setMessage("Tổng phần trăm các tiêu chí phải bằng 1");
+				Log log = new Log(0, "configKPIJobPosition", "failed", "Cấu hình lưới tiêu chí không đạt 100%", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
 				return Response
 					      .status(Response.Status.OK)
 					      .entity(response)
@@ -528,12 +542,12 @@ public class ConfigKPIService {
 			if(response1 != null) {
 				response.setData(response1);
 				response.setMessage("Cấu hình tiêu chí thành công");
-				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				Log log = new Log(0, "configKPIJobPosition", "success", "Cấu hình lưới tiêu chí vị trí công việc", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
 			} else {
 				response.setData(null);
 				response.setMessage("Cấu hình tiêu chí thất bại");
-				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				Log log = new Log(0, "configKPIJobPosition", "failed", "Cấu hình lưới tiêu chí vị trí công việc", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
 			}
 			return Response
@@ -542,6 +556,8 @@ public class ConfigKPIService {
 				      .build();
 		} catch(Exception e) {
 			System.out.println(e.toString());
+			Log log = new Log(0, "configKPIJobPosition", "failed", "Cấu hình lưới tiêu chí vị trí công việc thất bại", Config.LOG_TYPE_KPI);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("get failed")
@@ -558,6 +574,8 @@ public class ConfigKPIService {
 			ResponseData response = new ResponseData();
 			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getCriterias() == null) {
 				response.setMessage("Thiêu dữ liệu");
+				Log log = new Log(dataConfigKPI.getUserId(), "configKPIProject", "failed", "Thiếu dữ liệu", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
 				return Response
 					      .status(Response.Status.OK)
 					      .entity(response)
@@ -569,6 +587,8 @@ public class ConfigKPIService {
 				CiterialKPI citerialKPI = array.get(counter);	
 				if(0 > citerialKPI.getRatio() || citerialKPI.getRatio() > 1) {
 					response.setMessage("chỉ số đánh giá tiêu chí phải nằm trong khoảng 0 đến 1");
+					Log log = new Log(dataConfigKPI.getUserId(), "configKPIProject", "failed", "Cấu hình lưới tiêu chí không nằm trong khoảng 0 đến 1", Config.LOG_TYPE_KPI);
+					logDao.addLog(log);
 					return Response
 						      .status(Response.Status.OK)
 						      .entity(response)
@@ -578,6 +598,8 @@ public class ConfigKPIService {
 			}
 			if(0.99 > i || i > 1.01) {
 				response.setMessage("Tổng phần trăm các tiêu chí phải bằng 1");
+				Log log = new Log(0, "configKPIProject", "failed", "Cấu hình lưới tiêu chí không đạt 100%", Config.LOG_TYPE_KPI);
+				logDao.addLog(log);
 				return Response
 					      .status(Response.Status.OK)
 					      .entity(response)
@@ -596,12 +618,12 @@ public class ConfigKPIService {
 			if(response1 != null) {
 				response.setData(response1);
 				response.setMessage("Cấu hình tiêu chí thành công");
-				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				Log log = new Log(0 , "configKPIProject", "success", "Cấu hình lưới tiêu chí dự án", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
 			} else {
 				response.setData(null);
 				response.setMessage("Cấu hình tiêu chí thất bại");
-				Log log = new Log(dataConfigKPI.getUserId(), "configKPIDepartment", "failed", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
+				Log log = new Log(0 , "configKPIProject", "failed", "Cấu hình lưới tiêu chí dự án", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
 			}
 			return Response
@@ -610,6 +632,8 @@ public class ConfigKPIService {
 				      .build();
 		} catch(Exception e) {
 			System.out.println(e.toString());
+			Log log = new Log(0 , "configKPIProject", "failed", "Cấu hình lưới tiêu chí dự án thất bại", Config.LOG_TYPE_KPI);
+			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("get failed")
