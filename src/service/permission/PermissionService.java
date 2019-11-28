@@ -2,9 +2,7 @@ package service.permission;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
@@ -13,18 +11,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import dao.LogDao;
 import dao.PermissionDao;
 import dao.UserDao;
 import model.GroupPermission;
+import model.Log;
 import model.Permission;
-import model.Module;
-import model.ModuleDepartment;
-import model.UserGroup;
 import model.UserInfo;
 import model.UserPermission;
 import utils.Config;
@@ -33,6 +28,7 @@ import utils.Config;
 public class PermissionService {
 	PermissionDao permissionDao = new PermissionDao();
 	UserDao userDao = new UserDao();
+	LogDao logDao = new LogDao();
 	Logger log = Logger.getLogger("abc");
 	//phân quyền cho chức vụ
 	@Path("/addGroupPermission")
@@ -44,6 +40,8 @@ public class PermissionService {
 			//check permissionId
 			Permission permission = permissionDao.getPermissionById(groupPermission.getPermissionId());
 			if (permission == null) {
+				Log log = new Log(0, "addGroupPermission", "error", "permissionId không tồn tại", Config.LOG_TYPE_USER);
+				logDao.addLog(log);
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity("permissionId không tồn tại")
@@ -66,6 +64,7 @@ public class PermissionService {
 				}
 			}
 			if (check == false) {
+				logDao.addLog(new Log(0, "addGroupPermission", "error", "chức vụ này không phù hợp với quyền này", Config.LOG_TYPE_USER));
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity("chức vụ này không phù hợp với quyền này")
@@ -74,6 +73,7 @@ public class PermissionService {
 			// add group permission
 			long id = permissionDao.addGroupPermission(groupPermission);
 			GroupPermission temp = permissionDao.getGroupPermissionById(id);
+			logDao.addLog(new Log(0, "addGroupPermission", "success", "phân quyền thành công", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.OK)
 				      .entity(temp)
@@ -93,6 +93,7 @@ public class PermissionService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response removeGroupPermission(GroupPermission groupPermision) {
 		if(groupPermision.getGroupId()==0 || groupPermision.getPermissionId()==0) {
+			logDao.addLog(new Log(0, "removeGroupPermission", "error", "thiếu permissionId hoặc groupId", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.OK)
 				      .entity("thiếu permissionId hoặc groupId")
@@ -101,12 +102,14 @@ public class PermissionService {
 		try {
 			List<GroupPermission> infos = permissionDao.getGroupPermission(groupPermision.getGroupId(), groupPermision.getPermissionId());
 			if (infos.size() == 0) {
+				logDao.addLog(new Log(0, "removeGroupPermission", "error", "không tồn tại", Config.LOG_TYPE_USER));
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity("không tồn tại")
 					      .build();
 			}
 			permissionDao.deleteGroupPermission(infos);
+			logDao.addLog(new Log(0, "removeGroupPermission", "success", "success", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.OK)
 				      .entity("success")
@@ -123,11 +126,13 @@ public class PermissionService {
 	@GET
 	public Response getAllGroupPermissions(){
 		try {
+			logDao.addLog(new Log(0, "getAllGroupPermissions", "success", "success", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.OK)
 				      .entity(permissionDao.getAllGroupPermissions())
 				      .build();
 		} catch(Exception e) {
+			logDao.addLog(new Log(0, "getAllGroupPermissions", "error", "có lỗi đã xảy ra", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("có lỗi đã xảy ra")
@@ -144,6 +149,7 @@ public class PermissionService {
 			try {
 				ids.add(Long.valueOf(listId[i]));
 			} catch (Exception e) {
+				logDao.addLog(new Log(0, "getMultiGroupPermissions", "error", "tham số truyền vào sai", Config.LOG_TYPE_USER));
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity("tham số truyền vào sai")
@@ -164,13 +170,14 @@ public class PermissionService {
 			}
 		}
 		
-		
+		logDao.addLog(new Log(0, "getMultiGroupPermissions", "success", "success", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.OK)
 				      .entity((result))
 				      .build();
 		} catch(Exception e) {
 			log.warning(e.getMessage());
+			logDao.addLog(new Log(0, "getMultiGroupPermissions", "error", "có lỗi đã xảy ra", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("có lỗi đã xảy ra")
@@ -187,6 +194,7 @@ public class PermissionService {
 		try {
 			Permission permission = permissionDao.getPermissionById(userPermission.getPermissionId());
 			if (permission == null) {
+				logDao.addLog(new Log(0, "addUserPermission", "error", "permissionId không đúng", Config.LOG_TYPE_USER));
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity("permissionId không đúng")
@@ -194,6 +202,7 @@ public class PermissionService {
 			}
 			UserInfo info = userDao.getUserById(userPermission.getUserId());
 			if (info == null) {
+				logDao.addLog(new Log(0, "addUserPermission", "error", "userId không đúng", Config.LOG_TYPE_USER));
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity("userId không đúng")
@@ -202,12 +211,14 @@ public class PermissionService {
 			// add group permission
 			long id = permissionDao.addUserPermission(userPermission);
 			UserPermission temp = permissionDao.getUserPermissionById(id);
+			logDao.addLog(new Log(0, "addUserPermission", "success", "success", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.OK)
 				      .entity(temp)
 				      .build();
 			
 		} catch(Exception e) {
+			logDao.addLog(new Log(0, "addUserPermission", "error", "có lỗi đã xảy ra", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("groupId hoặc permissionId không đúng")
@@ -223,6 +234,7 @@ public class PermissionService {
 		try {
 			Permission permission = permissionDao.getPermissionById(userPermission.getPermissionId());
 			if (permission == null) {
+				logDao.addLog(new Log(0, "removeUserPermission", "error", "permissionId không đúng", Config.LOG_TYPE_USER));
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity("permissionId không đúng")
@@ -230,18 +242,21 @@ public class PermissionService {
 			}
 			UserInfo info = userDao.getUserById(userPermission.getUserId());
 			if (info == null) {
+				logDao.addLog(new Log(0, "removeUserPermission", "error", "userId không đúng", Config.LOG_TYPE_USER));
 				return Response
 					      .status(Response.Status.INTERNAL_SERVER_ERROR)
 					      .entity("userId không đúng")
 					      .build();
 			}
 			permissionDao.removeUserPermission(userPermission.getUserId(), userPermission.getPermissionId());
+			logDao.addLog(new Log(0, "removeUserPermission", "success", "success", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.OK)
 				      .entity("success")
 				      .build();
 			
 		} catch(Exception e) {
+			logDao.addLog(new Log(0, "removeUserPermission", "error", "user không có permission này", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("user không có permission này")
@@ -265,11 +280,14 @@ public class PermissionService {
 					all.addAll(permissionDao.getGroupPermissions(groupIds.get(i)));
 				}
 			}
+			logDao.addLog(new Log(0, "getPermissionsOfUser", "success", "success", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.OK)
 				      .entity(all)
 				      .build();
+			
 		} catch(Exception e) {
+			logDao.addLog(new Log(0, "getPermissionsOfUser", "error", "có lỗi đã xảy ra", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("có lỗi đã xảy ra")
@@ -300,6 +318,7 @@ public class PermissionService {
 				break;
 			}
 		}
+		logDao.addLog(new Log(0, "checkPermissionOfUser", "success", "success", Config.LOG_TYPE_USER));
 		return Response
 			      .status(Response.Status.OK)
 			      .entity(message)
@@ -313,6 +332,7 @@ public class PermissionService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addPermission(Permission permission){
 		if (permission.getModuleId() == 0) {
+			logDao.addLog(new Log(0, "addPermission", "error", "thiếu moduleId", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("thiếu moduleId")
@@ -320,12 +340,14 @@ public class PermissionService {
 		}
 		// check name
 		if (permission.getName() == Config.STRING_EMPTY) {
+			logDao.addLog(new Log(0, "addPermission", "error", "thiếu tên", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("thiếu tên")
 				      .build();
 		}
 		if (permissionDao.getPermissionByName(permission.getName()).size()>0) {
+			logDao.addLog(new Log(0, "addPermission", "error", "trùng tên", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("trùng tên")
@@ -335,6 +357,7 @@ public class PermissionService {
 		permission.setCreatedDate((new Date()).getTime());
 		long id = permissionDao.addPermission(permission);
 		Permission temp = permissionDao.getPermissionById(id);
+		logDao.addLog(new Log(0, "addPermission", "success", "success", Config.LOG_TYPE_USER));
 		return Response
 			      .status(Response.Status.OK)
 			      .entity(temp)
@@ -347,6 +370,7 @@ public class PermissionService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response editPermission(Permission permission){
 		if (permission.getModuleId() == 0) {
+			logDao.addLog(new Log(0, "editPermission", "error", "thiếu moduleId", Config.LOG_TYPE_USER));
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("thiếu moduleId")
@@ -370,6 +394,13 @@ public class PermissionService {
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("permission không tồn tại")
+				      .build();
+		}
+		
+		if (permissionDao.getPermissionById(permission.getId()).getLastUpdated() > permission.getLastUpdated()) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("dữ liệu cũ")
 				      .build();
 		}
 		// save

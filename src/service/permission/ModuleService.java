@@ -50,6 +50,12 @@ public class ModuleService {
 				      .entity("không tìm thấy module")
 				      .build();
 		}
+		if (temp.getLastUpdated() > module.getLastUpdated()) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("dữ liệu cũ")
+				      .build();
+		}
 		permissionDao.saveModule(module);
 		return Response
 			      .status(Response.Status.OK)

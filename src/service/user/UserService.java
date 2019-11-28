@@ -49,6 +49,8 @@ public class UserService {
 				      .build();
 		}
 		
+		
+		
 		//check id
 		UserInfo testId = userDao.getUserById(user.getId());
 		if (testId == null ) {
@@ -58,6 +60,15 @@ public class UserService {
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
 				      .entity("Không tìm thấy user")
 				      .build(); 
+		}
+		
+		if (testId.getLastUpdate() != user.getLastUpdate()) {
+			Log log = new Log(0, "editUserInfo", "error", "dữ liệu cũ", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Dữ liệu cũ")
+				      .build();
 		}
 				
 		//check mail
@@ -184,16 +195,6 @@ public class UserService {
 		Log log = new Log(0, "getUserInfos", "success", "Lấy thành công danh sách users", Config.LOG_TYPE_USER);
 		logDao.addLog(log);
 		return listInfo;
-	}
-	
-	@Path("/getLog")
-	@GET
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response getFile() {
-	  File file = new File("log.txt");
-	  return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-	      .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
-	      .build();
 	}
 	
 }

@@ -37,4 +37,23 @@ public class LogService {
 				      .build();
 		}
 	}
+	
+	@Path("/getLogKPI")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getLogKPI(@QueryParam("fromDate") long fromDate, @QueryParam("thruDate") long thruDate, @QueryParam("userId") long userId){
+		try {
+			List<Log> logs = logDao.getLogs(Config.LOG_TYPE_KPI, fromDate, thruDate, userId);
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(logs)
+				      .build();
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Không tìm thấy log")
+				      .build();
+		}
+	}
 }
