@@ -255,9 +255,19 @@ public class PermissionService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPermissionsOfUser(@QueryParam("userId") long userId){
 		try {
+			List<Permission> all = new ArrayList<Permission>();
+			
+			if (permissionDao.getUserPermissions(userId).size()>0)
+				all.addAll(permissionDao.getUserPermissions(userId));
+			List<Long> groupIds = permissionDao.getGroup(userId);
+			for (int i = 0; i< groupIds.size(); i++) {
+				if (permissionDao.getGroupPermissions(groupIds.get(i)).size() > 0) {
+					all.addAll(permissionDao.getGroupPermissions(groupIds.get(i)));
+				}
+			}
 			return Response
 				      .status(Response.Status.OK)
-				      .entity(permissionDao.getUserPermissions(userId))
+				      .entity(all)
 				      .build();
 		} catch(Exception e) {
 			return Response
@@ -274,8 +284,15 @@ public class PermissionService {
 	public Response checkPermissionOfUser(@QueryParam("userId") long userId, @QueryParam("permissionId") long permissionId, @QueryParam("permissionName") String permissionName){
 		boolean message = false;
 		List<Permission> all = new ArrayList<Permission>();
-		all.addAll(permissionDao.getUserPermissions(userId));
 		
+		if (permissionDao.getUserPermissions(userId).size()>0)
+			all.addAll(permissionDao.getUserPermissions(userId));
+		List<Long> groupIds = permissionDao.getGroup(userId);
+		for (int i = 0; i< groupIds.size(); i++) {
+			if (permissionDao.getGroupPermissions(groupIds.get(i)).size() > 0) {
+				all.addAll(permissionDao.getGroupPermissions(groupIds.get(i)));
+			}
+		}
 		
 		for (int i = 0 ; i< all.size(); i++) {
 			if (all.get(i).getId() == permissionId) {
@@ -380,25 +397,6 @@ public class PermissionService {
 			return Response
 				      .status(Response.Status.OK)
 				      .entity(permissionDao.checkPermissionOfGroup(permissionId, groupId))
-				      .build();
-		} catch(Exception e) {
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("có lỗi đã xảy ra")
-				      .build();
-		}
-	}
-	
-	@Path("/getAllPermissionsOfUser")
-	@GET
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllPermissionsOfUser(){
-		long id = 1;
-		try {
-			return Response
-				      .status(Response.Status.OK)
-				      .entity(permissionDao.getGroupPermissions(id))
 				      .build();
 		} catch(Exception e) {
 			return Response

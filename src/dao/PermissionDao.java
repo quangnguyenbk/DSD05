@@ -89,8 +89,8 @@ public class PermissionDao {
 		  return listGP;
 	}
 	
-	public List<Permission> getGroupPermissions(long id) {
-		  List<GroupPermission> listGP = ofy().load().type(GroupPermission.class).filter("groupId", id).filter("statusId", Config.DEFAULT_ACTIVE).list();
+	public List<Permission> getGroupPermissions(long groupId) {
+		  List<GroupPermission> listGP = ofy().load().type(GroupPermission.class).filter("groupId", groupId).filter("statusId", Config.DEFAULT_ACTIVE).list();
 		  List<Permission> pers = new ArrayList<Permission>();
 		  for (int i = 0; i< listGP.size(); i++) {
 			  Permission per = getPermissionById(listGP.get(i).getPermissionId());
@@ -206,6 +206,28 @@ public class PermissionDao {
 				if (ob.containsKey("id")) {
 					if (Long.valueOf((Long)ob.get("id")) == groupId) {
 						ids.add(Long.valueOf((Long)ob.get("organizationId")));
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.warning(e.getLocalizedMessage());
+		}
+		return  ids;
+	}
+	
+	public List<Long> getGroup(long userId){
+		List<Long> ids = new ArrayList<Long>();
+		//
+		try {
+			StringBuffer response = RequestGet.send(Config.GET_USER_INFORMATION + userId);
+			log.warning("reponse:" + response.toString());
+			JSONArray obj = (JSONArray)new JSONParser().parse(response.toString());
+			JSONArray array = (JSONArray) obj;
+			for (int i = 0 ; i< array.size(); i++) {
+				JSONObject ob = (JSONObject) array.get(i);
+				if (ob.containsKey("userId")) {
+					if (Long.valueOf((Long)ob.get("userId")) == userId) {
+						ids.add(Long.valueOf((Long)ob.get("positionId")));
 					}
 				}
 			}
