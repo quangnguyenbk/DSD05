@@ -413,7 +413,7 @@ public class PermissionService {
 	
 	
 	@Path("/checkPermissionOfGroup")
-	@POST
+	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response checkPermissionOfGroup(@QueryParam("groupId") long groupId, @QueryParam("permissionId") long permissionId){
