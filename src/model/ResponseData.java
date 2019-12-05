@@ -6,12 +6,12 @@ import com.googlecode.objectify.annotation.Index;
 public class ResponseData {
 	@Index 
 	private String message;
-	private String data;
+	DataConfigKPI data;
 	private Boolean checkData;
 	public ResponseData() {
 	}
 
-	public ResponseData(String message, String data, Boolean checkData) {
+	public ResponseData(String message, DataConfigKPI data, Boolean checkData) {
 		super();
 		this.message = message;
 		this.data = data;
@@ -26,11 +26,11 @@ public class ResponseData {
 		this.message = message;
 	}
 	
-	public String getData() {
+	public DataConfigKPI getData() {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(DataConfigKPI data) {
 		this.data = data;
 	}
 	

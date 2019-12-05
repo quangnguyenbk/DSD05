@@ -24,12 +24,13 @@ public class RequestPut {
             osw.close();
 			// For POST only - END
 			int responseCode = con.getResponseCode();
+			System.out.println("!" + responseCode);
 			if (responseCode == HttpURLConnection.HTTP_OK) { //success
 				BufferedReader in = new BufferedReader(new InputStreamReader(
 						con.getInputStream()));
 				String inputLine;
 				StringBuffer response = new StringBuffer();
-
+				System.out.println("!" + response);
 				while ((inputLine = in.readLine()) != null) {
 					response.append(inputLine);
 				}
@@ -43,6 +44,7 @@ public class RequestPut {
 				return null;
 			}
 		} catch (Exception e) {
+			System.out.println("!" + e.toString());
 			return null;
 		}
 	}

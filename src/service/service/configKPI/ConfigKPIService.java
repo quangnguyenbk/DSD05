@@ -12,6 +12,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import CallService.NetGet;
@@ -464,7 +465,10 @@ public class ConfigKPIService {
 			String url = Config.API_UPDATE_KPI + String.valueOf(id);
 			String response1 = RequestPut.send(url, data);
 			if(response1 != null) {
-				response.setData(response1);
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
+				response.setData(data1);
 				response.setMessage("Cấu hình tiêu chí thành công");
 				Log log = new Log(0, "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
@@ -540,9 +544,12 @@ public class ConfigKPIService {
 			String url = Config.API_UPDATE_KPI + String.valueOf(id);
 			String response1 = RequestPut.send(url, data);
 			if(response1 != null) {
-				response.setData(response1);
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
+				response.setData(data1);
 				response.setMessage("Cấu hình tiêu chí thành công");
-				Log log = new Log(0, "configKPIJobPosition", "success", "Cấu hình lưới tiêu chí vị trí công việc", Config.LOG_TYPE_KPI);
+				Log log = new Log(0 , "configKPIProject", "success", "Cấu hình lưới tiêu chí dự án", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
 			} else {
 				response.setData(null);
@@ -574,7 +581,7 @@ public class ConfigKPIService {
 			ResponseData response = new ResponseData();
 			if(dataConfigKPI.getId() == 0 || dataConfigKPI.getCriterias() == null) {
 				response.setMessage("Thiêu dữ liệu");
-				Log log = new Log(dataConfigKPI.getUserId(), "configKPIProject", "failed", "Thiếu dữ liệu", Config.LOG_TYPE_KPI);
+				Log log = new Log(0, "configKPIProject", "failed", "Thiếu dữ liệu", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
 				return Response
 					      .status(Response.Status.OK)
@@ -587,7 +594,7 @@ public class ConfigKPIService {
 				CiterialKPI citerialKPI = array.get(counter);	
 				if(0 > citerialKPI.getRatio() || citerialKPI.getRatio() > 1) {
 					response.setMessage("chỉ số đánh giá tiêu chí phải nằm trong khoảng 0 đến 1");
-					Log log = new Log(dataConfigKPI.getUserId(), "configKPIProject", "failed", "Cấu hình lưới tiêu chí không nằm trong khoảng 0 đến 1", Config.LOG_TYPE_KPI);
+					Log log = new Log(0, "configKPIProject", "failed", "Cấu hình lưới tiêu chí không nằm trong khoảng 0 đến 1", Config.LOG_TYPE_KPI);
 					logDao.addLog(log);
 					return Response
 						      .status(Response.Status.OK)
@@ -616,7 +623,10 @@ public class ConfigKPIService {
 			String url = Config.API_UPDATE_KPI + String.valueOf(id);
 			String response1 = RequestPut.send(url, data);
 			if(response1 != null) {
-				response.setData(response1);
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
+				response.setData(data1);
 				response.setMessage("Cấu hình tiêu chí thành công");
 				Log log = new Log(0 , "configKPIProject", "success", "Cấu hình lưới tiêu chí dự án", Config.LOG_TYPE_KPI);
 				logDao.addLog(log);
