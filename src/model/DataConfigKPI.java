@@ -66,19 +66,19 @@ public class DataConfigKPI {
                 '}';
     }
 
-	public long getDepartmentId() {
+	public long getDepartment_id() {
 		return department_id;
 	}
 
-	public void setDepartmentId(long department_id) {
+	public void setDepartment_id(long department_id) {
 		this.department_id = department_id;
 	}
 
-	public String getUpdateAt() {
+	public String getUpdate_at() {
 		return update_at;
 	}
 
-	public void setUpdateAt(String update_at) {
+	public void setUpdate_at(String update_at) {
 		this.update_at = update_at;
 	}
 
@@ -90,27 +90,27 @@ public class DataConfigKPI {
 		this.type = type;
 	}
 
-	public String getCreatedAt() {
+	public String getCreated_at() {
 		return created_at;
 	}
 
-	public void setCreatedAt(String created_at) {
+	public void setCreated_at(String created_at) {
 		this.created_at = created_at;
 	}
 
-	public long getEmployeeId() {
+	public long getEmployee_id() {
 		return employee_id;
 	}
 
-	public void setEmployeeId(long employee_id) {
+	public void setEmployee_id(long employee_id) {
 		this.employee_id = employee_id;
 	}
 
-	public long getProjectId() {
+	public long getProject_id() {
 		return project_id;
 	}
 
-	public void setProjectId(long project_id) {
+	public void setProject_id(long project_id) {
 		this.project_id = project_id;
 	}
 }

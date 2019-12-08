@@ -9,6 +9,7 @@ import com.googlecode.objectify.Work;
 import dao.PermissionDao;
 import model.CiteriaJobpositionKPI;
 import model.CiteriaProjectKPI;
+import model.DataConfig;
 import model.DepartmentCriterialKPI;
 import model.GroupPermission;
 import model.Log;
@@ -41,6 +42,7 @@ public class MyBootstrapper implements ServletContextListener {
 		ObjectifyService.register(Log.class);
 		ObjectifyService.register(Module.class);
 		ObjectifyService.register(ModuleDepartment.class);
+		ObjectifyService.register(DataConfig.class);
 		
 	}
 

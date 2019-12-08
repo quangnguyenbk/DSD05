@@ -13,7 +13,7 @@ import com.googlecode.objectify.annotation.Index;
 
 public class CiterialKPI {
 	@Id
-	private int id;
+	private Long id;
 	@Index
 	private String name;
 	@Index
@@ -24,7 +24,7 @@ public class CiterialKPI {
 	public CiterialKPI() {
 	}
 
-	public CiterialKPI(int id, String name, float ratio, String note) {
+	public CiterialKPI(Long id, String name, float ratio, String note) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -32,10 +32,10 @@ public class CiterialKPI {
 		this.note = note;
 	}
 	
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 

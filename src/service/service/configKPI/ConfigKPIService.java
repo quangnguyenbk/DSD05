@@ -1,7 +1,10 @@
 package service.service.configKPI;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
 import CallService.NetGet;
 import dao.ConfigKPIDao;
@@ -22,6 +26,7 @@ import dao.UserDao;
 import model.CiteriaJobpositionKPI;
 import model.CiteriaProjectKPI;
 import model.CiterialKPI;
+import model.DataConfig;
 import model.DataConfigKPI;
 import model.DepartmentCriterialKPI;
 import model.Log;
@@ -395,29 +400,71 @@ public class ConfigKPIService {
 //				      .build();
 //		}   
 //	}
-//	@Path("/checkExitCiteria")
-//	@GET
-//    @Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response checkCiteriaJob(@QueryParam("id") Long id) {
-//		try {
-//			return Response
-//				      .status(Response.Status.OK)
-//				      .entity("true")
-//				      .build();
-//		} catch(Exception e) {
-//			System.out.println(e.toString());
-//			return Response
-//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-//				      .entity("get failed")
-//				      .build();
-//		}   
-//	}
+	@Path("/addDataConfigByTime")
+	@POST
+    @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addDataConfigByTime(DataConfig dataConfig) {
+		try {
+			ResponseData response = new ResponseData();
+			response.setMessage("Tháng này lưới tiêu chí chưa được cấu hình tiêu chí");
+			DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());
+			if(check != null) {
+				response.setMessage("đã tồn tại");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build();
+			} else {
+				configKPIDao.addDataKPI(dataConfig);
+				response.setMessage("tạo thành công");
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity(response)
+					      .build();
+			}
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}   
+	}
+	
+	@Path("/dataConfigByTime")
+	@GET
+    @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDataConfigByTime(@QueryParam("id") long id, @QueryParam("month") Long month, @QueryParam("year") long year) {
+		try {
+			DataConfig check = configKPIDao.getDataKPI(id, month, year);
+			if(check != null) {
+				return Response
+					      .status(Response.Status.OK)
+					      .entity(check)
+					      .build();
+			} else {
+				ResponseData response = new ResponseData();
+				response.setMessage("Tháng này lưới tiêu chí chưa được cấu hình tiêu chí");
+				return Response
+					      .status(Response.Status.OK)
+					      .entity(response)
+					      .build();
+			}
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("get failed")
+				      .build();
+		}   
+	}
 	
 	@Path("/configKPIDepartment")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response configKPIDepartment(DataConfigKPI dataConfigKPI) {
 		try {
 			ResponseData response = new ResponseData();
@@ -456,6 +503,7 @@ public class ConfigKPIService {
 			}
 			String data ="";
 			try {
+				this.mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 			    data = mapper.writeValueAsString(dataConfigKPI);
 			    System.out.println(data);
 			} catch (IOException e) {
@@ -468,6 +516,22 @@ public class ConfigKPIService {
 				ObjectMapper objectMapper = new ObjectMapper();
 				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
+				DataConfig dataConfig = new DataConfig();
+				dataConfig.setKpiId(data1.getId());
+				dataConfig.setCriterias(data1.getCriterias());
+				Date date = new Date();
+				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				long year  = localDate.getYear();
+				long month = localDate.getMonthValue();
+				dataConfig.setMonth(month);
+				dataConfig.setYear(year);
+				DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());
+				if(check != null) {
+					check.setCriterias(data1.getCriterias());
+					configKPIDao.saveDataKPI(check);
+				} else {
+					configKPIDao.addDataKPI(dataConfig);
+				}
 				response.setData(data1);
 				response.setMessage("Cấu hình tiêu chí thành công");
 				Log log = new Log(0, "configKPIDepartment", "success", "Cấu hình lưới tiêu chí phòng ban", Config.LOG_TYPE_KPI);
@@ -535,6 +599,7 @@ public class ConfigKPIService {
 			}
 			String data ="";
 			try {
+				this.mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 			    data = mapper.writeValueAsString(dataConfigKPI);
 			    System.out.println(data);
 			} catch (IOException e) {
@@ -547,6 +612,22 @@ public class ConfigKPIService {
 				ObjectMapper objectMapper = new ObjectMapper();
 				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
+				DataConfig dataConfig = new DataConfig();
+				dataConfig.setKpiId(data1.getId());
+				dataConfig.setCriterias(data1.getCriterias());
+				Date date = new Date();
+				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				long year  = localDate.getYear();
+				long month = localDate.getMonthValue();
+				dataConfig.setMonth(month);
+				dataConfig.setYear(year);
+				DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());
+				if(check != null) {
+					check.setCriterias(data1.getCriterias());
+					configKPIDao.saveDataKPI(check);
+				} else {
+					configKPIDao.addDataKPI(dataConfig);
+				}
 				response.setData(data1);
 				response.setMessage("Cấu hình tiêu chí thành công");
 				Log log = new Log(0 , "configKPIProject", "success", "Cấu hình lưới tiêu chí dự án", Config.LOG_TYPE_KPI);
@@ -614,6 +695,7 @@ public class ConfigKPIService {
 			}
 			String data ="";
 			try {
+				this.mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 			    data = mapper.writeValueAsString(dataConfigKPI);
 			    System.out.println(data);
 			} catch (IOException e) {
@@ -626,6 +708,22 @@ public class ConfigKPIService {
 				ObjectMapper objectMapper = new ObjectMapper();
 				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
+				DataConfig dataConfig = new DataConfig();
+				dataConfig.setKpiId(data1.getId());
+				dataConfig.setCriterias(data1.getCriterias());
+				Date date = new Date();
+				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				long year  = localDate.getYear();
+				long month = localDate.getMonthValue();
+				dataConfig.setMonth(month);
+				dataConfig.setYear(year);
+				DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());
+				if(check != null) {
+					check.setCriterias(data1.getCriterias());
+					configKPIDao.saveDataKPI(check);
+				} else {
+					configKPIDao.addDataKPI(dataConfig);
+				}
 				response.setData(data1);
 				response.setMessage("Cấu hình tiêu chí thành công");
 				Log log = new Log(0 , "configKPIProject", "success", "Cấu hình lưới tiêu chí dự án", Config.LOG_TYPE_KPI);
