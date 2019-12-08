@@ -514,6 +514,7 @@ public class ConfigKPIService {
 			String response1 = RequestPut.send(url, data);
 			if(response1 != null) {
 				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
 				DataConfig dataConfig = new DataConfig();
@@ -610,6 +611,7 @@ public class ConfigKPIService {
 			String response1 = RequestPut.send(url, data);
 			if(response1 != null) {
 				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
 				DataConfig dataConfig = new DataConfig();
@@ -706,6 +708,7 @@ public class ConfigKPIService {
 			String response1 = RequestPut.send(url, data);
 			if(response1 != null) {
 				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 				DataConfigKPI data1 = objectMapper.readValue(response1, DataConfigKPI.class);
 				DataConfig dataConfig = new DataConfig();
