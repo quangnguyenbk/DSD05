@@ -34,64 +34,64 @@ import utils.Config;
 public class UserService {
 	UserDao userDao = new UserDao();
 	LogDao logDao = new LogDao();
-	@Path("/editUserInfo")
-	@POST
-    @Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response editUserInfo(UserInfo user) {
-		// check null
-		if (user.getId() == null || user.getName() == null || user.getEmail() == null ) {
-			Log log = new Log(0, "editUserInfo", "error", "thiếu id, name hoặc email của user", Config.LOG_TYPE_USER);
-			logDao.addLog(log);
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Thiếu id, tên hoặc email")
-				      .build();
-		}
-		
-		
-		
-		//check id
-		UserInfo testId = userDao.getUserById(user.getId());
-		if (testId == null ) {
-			Log log = new Log(0, "editUserInfo", "error", "không tìm thấy user", Config.LOG_TYPE_USER);
-			logDao.addLog(log);
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Không tìm thấy user")
-				      .build(); 
-		}
-		
-		if (testId.getLastUpdate() != user.getLastUpdate()) {
-			Log log = new Log(0, "editUserInfo", "error", "dữ liệu cũ", Config.LOG_TYPE_USER);
-			logDao.addLog(log);
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Dữ liệu cũ")
-				      .build();
-		}
-				
-		//check mail
-		UserInfo test = userDao.getUserByEmail(user.getEmail());
-		if (test != null && !test.getId().equals(user.getId())) {
-			Log log = new Log(0, "editUserInfo", "error", "email không tồn tại", Config.LOG_TYPE_USER);
-			logDao.addLog(log);
-			return Response
-				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Trắng email")
-				      .build(); 
-		}
-		
-		// edit user info
-		userDao.saveUser(user);
-		UserInfo info = userDao.getUserById(user.getId());
-		Log log = new Log(0, "editUserInfo", "error", "cập nhật user thành công", Config.LOG_TYPE_USER);
-		logDao.addLog(log);
-		return Response
-			      .status(Response.Status.OK)
-			      .entity(info)
-			      .build();
-	}
+//	@Path("/editUserInfo")
+//	@POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response editUserInfo(UserInfo user) {
+//		// check null
+//		if (user.getId() == null || user.getName() == null || user.getEmail() == null ) {
+//			Log log = new Log(0, "editUserInfo", "error", "thiếu id, name hoặc email của user", Config.LOG_TYPE_USER);
+//			logDao.addLog(log);
+//			return Response
+//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+//				      .entity("Thiếu id, tên hoặc email")
+//				      .build();
+//		}
+//		
+//		
+//		
+//		//check id
+//		UserInfo testId = userDao.getUserById(user.getId());
+//		if (testId == null ) {
+//			Log log = new Log(0, "editUserInfo", "error", "không tìm thấy user", Config.LOG_TYPE_USER);
+//			logDao.addLog(log);
+//			return Response
+//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+//				      .entity("Không tìm thấy user")
+//				      .build(); 
+//		}
+//		
+//		if (testId.getLastUpdate() != user.getLastUpdate()) {
+//			Log log = new Log(0, "editUserInfo", "error", "dữ liệu cũ", Config.LOG_TYPE_USER);
+//			logDao.addLog(log);
+//			return Response
+//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+//				      .entity("Dữ liệu cũ")
+//				      .build();
+//		}
+//				
+//		//check mail
+//		UserInfo test = userDao.getUserByEmail(user.getEmail());
+//		if (test != null && !test.getId().equals(user.getId())) {
+//			Log log = new Log(0, "editUserInfo", "error", "email không tồn tại", Config.LOG_TYPE_USER);
+//			logDao.addLog(log);
+//			return Response
+//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+//				      .entity("Trắng email")
+//				      .build(); 
+//		}
+//		
+//		// edit user info
+//		userDao.saveUser(user);
+//		UserInfo info = userDao.getUserById(user.getId());
+//		Log log = new Log(0, "editUserInfo", "error", "cập nhật user thành công", Config.LOG_TYPE_USER);
+//		logDao.addLog(log);
+//		return Response
+//			      .status(Response.Status.OK)
+//			      .entity(info)
+//			      .build();
+//	}
 	
 	@Path("/removeUserInfo")
 	@POST
@@ -164,19 +164,62 @@ public class UserService {
 		UserInfo test = userDao.getUserByEmail(user.getEmail());
 		if (test != null) {
 			log.setResult("error");
-			log.setContent("Trắng email");
+			log.setContent("Trùng email");
 			logDao.addLog(log);
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("Trắng email")
+				      .entity("Trùng email")
 				      .build(); 
+		}
+		
+		// call register
+		
+		user.setUsername(user.getEmail());
+		userDao.addUser(user);
+		UserInfo info = userDao.getUserByEmail(user.getEmail());
+		userDao.callRegister(user);
+		log.setResult("success");
+		log.setContent("success" );
+		logDao.addLog(log);
+		return Response
+			      .status(Response.Status.OK)
+			      .entity(info)
+			      .build();
+	}
+	
+	@Path("/addUserInfoByRegiser")
+	@POST
+    @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addUserInfoByRegiser(UserInfo user) {
+		Log log = new Log();
+		log.setType(Config.LOG_TYPE_USER);
+		log.setAction("addUserInfo");
+		log.setUserId(user.getEmployId());
+		// check null
+		if (user.getName() == null || user.getEmail() == null ) {
+			log.setResult("error");
+			log.setContent("Thiếu tên hoặc email");
+			logDao.addLog(log);
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Thiếu tên hoặc email")
+				      .build();
+		}
+		//check mail
+		UserInfo test = userDao.getUserByEmail(user.getEmail());
+		if (test != null) {
+			return Response
+				      .status(Response.Status.OK)
+				      .entity(test)
+				      .build();
 		}
 		
 		// add user info
 		userDao.addUser(user);
 		UserInfo info = userDao.getUserByEmail(user.getEmail());
 		log.setResult("success");
-		log.setContent("Tạo thành công" + info.getId());
+		log.setContent("success" );
 		logDao.addLog(log);
 		return Response
 			      .status(Response.Status.OK)
@@ -195,6 +238,21 @@ public class UserService {
 		Log log = new Log(0, "getUserInfos", "success", "Lấy thành công danh sách users", Config.LOG_TYPE_USER);
 		logDao.addLog(log);
 		return listInfo;
+	}
+	
+	@Path("/getAllIds")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Long> getAllIds(){
+		
+		ArrayList<UserInfo> listInfo = new ArrayList<UserInfo>();
+		ArrayList<Long> listId = new ArrayList<Long>();
+		listInfo.addAll(userDao.getUserInfos());
+		for (int i = 0 ; i < listInfo.size(); i++)
+		{
+			listId.add(listInfo.get(i).getId());
+		}
+		return listId;
 	}
 	
 }

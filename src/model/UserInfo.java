@@ -5,7 +5,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
+
+import utils.Config;
 
 @Entity
 @XmlRootElement
@@ -15,15 +18,15 @@ public class UserInfo {
 	@Index
 	private String name;
 	@Index
-	String gender;
+	String gender= Config.STRING_EMPTY;
 	@Index
 	long birthday;
 	@Index
 	String email;
 	@Index
-	long phoneNumber;
+	String phoneNumber = Config.STRING_EMPTY;
 	@Index
-	String address;
+	String address = Config.STRING_EMPTY;
 	@Index
 	long employId;
 	@Index
@@ -32,11 +35,28 @@ public class UserInfo {
 	long dateCreated;
 	@Index
 	long lastUpdate;
+	@Ignore
+	String username;
+	@Ignore
+	String password = "1";
 	public UserInfo() {
 		
 	}
-	
-	public UserInfo(Long id, String name, String gender, long birthday, String email, long phoneNumber, String address,
+	@Override
+    public String toString() {
+        return "UserInfo{" +
+                ", name='" + name + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthday=" + birthday +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+	public UserInfo(Long id, String name, String gender, long birthday, String email, String phoneNumber, String address,
 			long departmentId, long statusId, long dateCreated, long lastUpdate) {
 		super();
 		this.id = id;
@@ -85,10 +105,10 @@ public class UserInfo {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public long getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
-	public void setPhoneNumber(long phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 	public long getDateCreated() {
@@ -128,8 +148,23 @@ public class UserInfo {
 		this.employId = employId;
 	}
 
+	public String getUsername() {
+		return username;
+	}
 
-	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
 	
 	
 }
