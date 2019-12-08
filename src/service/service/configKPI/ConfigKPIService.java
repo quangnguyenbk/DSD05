@@ -406,8 +406,10 @@ public class ConfigKPIService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addDataConfigByTime(DataConfig dataConfig) {
 		try {
+			if(dataConfig.getMonth() < 1) {
+				dataConfig.setMonth(0);
+			}
 			ResponseData response = new ResponseData();
-			response.setMessage("Tháng này lưới tiêu chí chưa được cấu hình tiêu chí");
 			DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());
 			if(check != null) {
 				response.setMessage("đã tồn tại");
@@ -522,8 +524,11 @@ public class ConfigKPIService {
 				dataConfig.setCriterias(data1.getCriterias());
 				Date date = new Date();
 				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				long month = 0;
+				if(data1.getPeriod() == Config.TYPE_MONTH) {
+					month = localDate.getMonthValue();
+				}
 				long year  = localDate.getYear();
-				long month = localDate.getMonthValue();
 				dataConfig.setMonth(month);
 				dataConfig.setYear(year);
 				DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());
@@ -619,8 +624,11 @@ public class ConfigKPIService {
 				dataConfig.setCriterias(data1.getCriterias());
 				Date date = new Date();
 				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				long month = 0;
+				if(data1.getPeriod() == Config.TYPE_MONTH) {
+					month = localDate.getMonthValue();
+				}
 				long year  = localDate.getYear();
-				long month = localDate.getMonthValue();
 				dataConfig.setMonth(month);
 				dataConfig.setYear(year);
 				DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());
@@ -716,8 +724,11 @@ public class ConfigKPIService {
 				dataConfig.setCriterias(data1.getCriterias());
 				Date date = new Date();
 				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				long month = 0;
+				if(data1.getPeriod() == Config.TYPE_MONTH) {
+					month = localDate.getMonthValue();
+				}
 				long year  = localDate.getYear();
-				long month = localDate.getMonthValue();
 				dataConfig.setMonth(month);
 				dataConfig.setYear(year);
 				DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());

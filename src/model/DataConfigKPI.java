@@ -25,14 +25,15 @@ public class DataConfigKPI {
 	private String type;
 	private String update_at;
 	private String created_at;
-	private long employee_id;
-	private long project_id;
+	private String employee_id;
+	private String project_id;
+	private String period;
 	
 	
 	public DataConfigKPI() {
 	}
 
-	public DataConfigKPI(long department_id, String type, String update_at, long employee_id, ArrayList<CiterialKPI> criterias, long id, String created_at, long project_id) {
+	public DataConfigKPI(long department_id, String type, String update_at, String employee_id, ArrayList<CiterialKPI> criterias, long id, String created_at, String project_id, String period) {
 		super();
 		this.id = id;
 		this.criterias = criterias;
@@ -42,6 +43,7 @@ public class DataConfigKPI {
 		this.department_id = department_id;
 		this.type = type;
 		this.update_at = update_at;
+		this.period = period;
 	}
 	
 	public long getId() {
@@ -101,19 +103,27 @@ public class DataConfigKPI {
 		this.created_at = created_at;
 	}
 
-	public long getEmployee_id() {
+	public String getEmployee_id() {
 		return employee_id;
 	}
 
-	public void setEmployee_id(long employee_id) {
+	public void setEmployee_id(String employee_id) {
 		this.employee_id = employee_id;
 	}
 
-	public long getProject_id() {
+	public String getProject_id() {
 		return project_id;
 	}
 
-	public void setProject_id(long project_id) {
+	public void setProject_id(String project_id) {
 		this.project_id = project_id;
+	}
+
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
 	}
 }

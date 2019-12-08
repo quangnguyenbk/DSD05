@@ -34,4 +34,8 @@ public class Config {
 	
 	public static final String GET_ALL_USER = "https://pmptn13.herokuapp.com/users";
 	
+	public static final String TYPE_MONTH = "MONTH";
+	
+	public static final String TYPE_YEAR = "YEAR";
+	
 }
