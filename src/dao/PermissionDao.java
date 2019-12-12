@@ -150,7 +150,34 @@ public class PermissionDao {
 		  }
 		  return pers;
 	}
-	
+	public boolean checkPermissionOfUser(long userId, long permissionId) {
+		boolean message = false;
+		List<Permission> all = new ArrayList<Permission>();
+		try {
+			if (getUserPermissions(userId).size()>0)
+				all.addAll(getUserPermissions(userId));
+			List<Long> groupIds = getGroup(userId);
+			for (int i = 0; i< groupIds.size(); i++) {
+				if (getGroupPermissions(groupIds.get(i)).size() > 0) {
+					all.addAll(getGroupPermissions(groupIds.get(i)));
+				}
+			}
+			
+			for (int i = 0 ; i< all.size(); i++) {
+				if (all.get(i).getId() == permissionId) {
+					message = true;
+					break;
+				}
+			}
+			UserDao userDao = new UserDao();
+			if (userDao.getUserById(userId).getStatusId() == Config.USER_INACTIVE)
+				return false;
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return message;
+	}
 	//module
 	public Module getModuleById(long id) {
 		return ofy().load().type(Module.class).id(id).now(); 

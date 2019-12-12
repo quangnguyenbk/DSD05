@@ -300,24 +300,7 @@ public class PermissionService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response checkPermissionOfUser(@QueryParam("userId") long userId, @QueryParam("permissionId") long permissionId, @QueryParam("permissionName") String permissionName){
-		boolean message = false;
-		List<Permission> all = new ArrayList<Permission>();
-		
-		if (permissionDao.getUserPermissions(userId).size()>0)
-			all.addAll(permissionDao.getUserPermissions(userId));
-		List<Long> groupIds = permissionDao.getGroup(userId);
-		for (int i = 0; i< groupIds.size(); i++) {
-			if (permissionDao.getGroupPermissions(groupIds.get(i)).size() > 0) {
-				all.addAll(permissionDao.getGroupPermissions(groupIds.get(i)));
-			}
-		}
-		
-		for (int i = 0 ; i< all.size(); i++) {
-			if (all.get(i).getId() == permissionId) {
-				message = true;
-				break;
-			}
-		}
+		boolean message = permissionDao.checkPermissionOfUser(userId, permissionId);
 		logDao.addLog(new Log(0, "checkPermissionOfUser", "success", "success", Config.LOG_TYPE_USER));
 		return Response
 			      .status(Response.Status.OK)
