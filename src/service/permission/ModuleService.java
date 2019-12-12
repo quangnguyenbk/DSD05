@@ -79,7 +79,14 @@ public class ModuleService {
 		if (module == null) {
 			return Response
 				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-				      .entity("không tìm thấy module")
+				      .entity("module không tồn tại")
+				      .build();
+		}
+		// check Department exist
+		if (!permissionDao.checkDepartmentExist(rd.getDepartmentId())) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("department không tồn tại")
 				      .build();
 		}
 		
@@ -87,6 +94,17 @@ public class ModuleService {
 		return Response
 			      .status(Response.Status.OK)
 			      .entity("success")
+			      .build();
+	}
+	
+	@Path("/checkDepartmentExist")
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response checkDepartmentExist(@QueryParam("departmentId") long departmentId){
+		return Response
+			      .status(Response.Status.OK)
+			      .entity(permissionDao.checkDepartmentExist(departmentId))
 			      .build();
 	}
 	

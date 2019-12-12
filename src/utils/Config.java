@@ -27,6 +27,7 @@ public class Config {
 	public static final String GET_DEPARTMENT_API ="http://18.217.21.235:8083/api/v1/position/listAll";
 	
 	public static final String GET_ALL_POSITION = "http://18.217.21.235:8083/api/v1/position/listAll";
+	public static final String GET_ALL_ORGANIZATION = "http://18.217.21.235:8083/api/v1/organizationalStructure/listOrganization";
 	
 	public static final String GET_USER_INFORMATION = "http://18.217.21.235:8083/api/v1/userOrganization/findByUserId?userId=";
 	
