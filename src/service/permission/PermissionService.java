@@ -296,10 +296,10 @@ public class PermissionService {
 	}
 	
 	@Path("/checkPermissionOfUser")
-	@POST
+	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response checkPermissionOfUser(@QueryParam("userId") long userId, @QueryParam("permissionId") long permissionId, @QueryParam("permissionName") String permissionName){
+	public Response checkPermissionOfUser(@QueryParam("userId") long userId, @QueryParam("permissionId") long permissionId){
 		boolean message = permissionDao.checkPermissionOfUser(userId, permissionId);
 		logDao.addLog(new Log(0, "checkPermissionOfUser", "success", "success", Config.LOG_TYPE_USER));
 		return Response
