@@ -24,6 +24,7 @@ import dao.LogDao;
 import dao.UserDao;
 import model.GroupPermission;
 import model.Log;
+import model.Permission;
 import model.UserInfo;
 import model.UserGroup;
 import model.UserPermission;
@@ -254,5 +255,47 @@ public class UserService {
 		}
 		return listId;
 	}
+	
+	@Path("/getMultiUserInfos")
+	@GET
+	public Response getMultiUserInfos(@QueryParam("listUserId") String listUserId){
+		String[] listId = listUserId.split(",");
+		List<Long> ids = new ArrayList<Long>();
+		for (int i = 0 ; i < listId.length ; i++) {
+			try {
+				ids.add(Long.valueOf(listId[i]));
+			} catch (Exception e) {
+				logDao.addLog(new Log(0, "getMultiUserInfos", "error", "tham số truyền vào sai", Config.LOG_TYPE_USER));
+				return Response
+					      .status(Response.Status.INTERNAL_SERVER_ERROR)
+					      .entity("tham số truyền vào sai")
+					      .build();
+			}
+		}
+		try {
+		List<UserInfo> result = new ArrayList<UserInfo>();
+		if (ids.size()> 0) {
+			for (int i = 0 ; i< ids.size(); i++) {
+				UserInfo info = userDao.getUserById(ids.get(i));
+				if (info!= null ) {
+					result.add(info);
+				}
+			}
+		}
+		
+		logDao.addLog(new Log(0, "getMultiUserInfos", "success", "success", Config.LOG_TYPE_USER));
+			return Response
+				      .status(Response.Status.OK)
+				      .entity((result))
+				      .build();
+		} catch(Exception e) {
+			logDao.addLog(new Log(0, "getMultiUserInfos", "error", "có lỗi đã xảy ra", Config.LOG_TYPE_USER));
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("có lỗi đã xảy ra")
+				      .build();
+		}
+	}
+	
 	
 }
