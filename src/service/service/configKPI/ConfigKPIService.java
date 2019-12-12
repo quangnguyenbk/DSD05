@@ -525,13 +525,15 @@ public class ConfigKPIService {
 				Date date = new Date();
 				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				long month = 0;
-				if(data1.getPeriod() == Config.TYPE_MONTH) {
+				System.out.println(data1.getPeriod());
+				if(data1.getPeriod().equals("MONTH")) {
 					month = localDate.getMonthValue();
 				}
 				long year  = localDate.getYear();
 				dataConfig.setMonth(month);
 				dataConfig.setYear(year);
 				DataConfig check = configKPIDao.getDataKPI(dataConfig.getKpiId(), dataConfig.getMonth(), dataConfig.getYear());
+				System.out.println(data1.getPeriod() + "11" + dataConfig.getMonth());
 				if(check != null) {
 					check.setCriterias(data1.getCriterias());
 					configKPIDao.saveDataKPI(check);
@@ -625,7 +627,7 @@ public class ConfigKPIService {
 				Date date = new Date();
 				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				long month = 0;
-				if(data1.getPeriod() == Config.TYPE_MONTH) {
+				if(data1.getPeriod().equals("MONTH")) {
 					month = localDate.getMonthValue();
 				}
 				long year  = localDate.getYear();
@@ -725,7 +727,7 @@ public class ConfigKPIService {
 				Date date = new Date();
 				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				long month = 0;
-				if(data1.getPeriod() == Config.TYPE_MONTH) {
+				if(data1.getPeriod().equals("MONTH")) {
 					month = localDate.getMonthValue();
 				}
 				long year  = localDate.getYear();
