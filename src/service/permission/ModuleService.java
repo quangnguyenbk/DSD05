@@ -118,7 +118,12 @@ public class ModuleService {
 				      .entity("không tìm thấy module")
 				      .build();
 		}
-		
+		if (!permissionDao.checkDepartmentExist(rd.getDepartmentId())) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("department không tồn tại")
+				      .build();
+		}
 		permissionDao.addModuleDepartment(rd);
 		return Response
 			      .status(Response.Status.OK)

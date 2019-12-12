@@ -41,7 +41,8 @@ public class Config {
 	public static final String GET_USER_INFORMATION = "http://18.217.21.235:8083/api/v1/userOrganization/findByUserId?userId=";
 	public static final String POST_REGISTER_USER ="https://api-ptpmpt-18.herokuapp.com/api/auth/register";
 	public static final String GET_ALL_USER = "https://pmptn13.herokuapp.com/users";
-	
+	public static final String GET_ALL_ORGANIZATION = "http://18.217.21.235:8083/api/v1/organizationalStructure/listOrganization";
+
 	//permission
 	public static final long ADMIN_PERMISSION = new Long("6115139271000064");
 	

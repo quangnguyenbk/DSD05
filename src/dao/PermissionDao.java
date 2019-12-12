@@ -221,6 +221,29 @@ public class PermissionDao {
 	}
 	
 	// call another api
+	public boolean checkDepartmentExist(long departmentId){
+		boolean check = false;
+		//
+		try {
+			StringBuffer response = RequestGet.send(Config.GET_ALL_ORGANIZATION);
+			log.warning("reponse:" + response.toString());
+			JSONArray obj = (JSONArray)new JSONParser().parse(response.toString());
+			JSONArray array = (JSONArray) obj;
+			for (int i = 0 ; i< array.size(); i++) {
+				JSONObject ob = (JSONObject) array.get(i);
+				if (ob.containsKey("id")) {
+					if (Long.valueOf((Long)ob.get("id")) == departmentId) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.warning(e.getLocalizedMessage());
+			return false;
+		}
+		return  false;
+	}
+	
 	public List<Long> getDepartment(long groupId){
 		List<Long> ids = new ArrayList<Long>();
 		//
