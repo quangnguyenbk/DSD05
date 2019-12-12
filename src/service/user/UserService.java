@@ -34,64 +34,64 @@ import utils.Config;
 public class UserService {
 	UserDao userDao = new UserDao();
 	LogDao logDao = new LogDao();
-//	@Path("/editUserInfo")
-//	@POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response editUserInfo(UserInfo user) {
-//		// check null
-//		if (user.getId() == null || user.getName() == null || user.getEmail() == null ) {
-//			Log log = new Log(0, "editUserInfo", "error", "thiếu id, name hoặc email của user", Config.LOG_TYPE_USER);
-//			logDao.addLog(log);
-//			return Response
-//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-//				      .entity("Thiếu id, tên hoặc email")
-//				      .build();
-//		}
-//		
-//		
-//		
-//		//check id
-//		UserInfo testId = userDao.getUserById(user.getId());
-//		if (testId == null ) {
-//			Log log = new Log(0, "editUserInfo", "error", "không tìm thấy user", Config.LOG_TYPE_USER);
-//			logDao.addLog(log);
-//			return Response
-//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-//				      .entity("Không tìm thấy user")
-//				      .build(); 
-//		}
-//		
-//		if (testId.getLastUpdate() != user.getLastUpdate()) {
-//			Log log = new Log(0, "editUserInfo", "error", "dữ liệu cũ", Config.LOG_TYPE_USER);
-//			logDao.addLog(log);
-//			return Response
-//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-//				      .entity("Dữ liệu cũ")
-//				      .build();
-//		}
-//				
-//		//check mail
-//		UserInfo test = userDao.getUserByEmail(user.getEmail());
-//		if (test != null && !test.getId().equals(user.getId())) {
-//			Log log = new Log(0, "editUserInfo", "error", "email không tồn tại", Config.LOG_TYPE_USER);
-//			logDao.addLog(log);
-//			return Response
-//				      .status(Response.Status.INTERNAL_SERVER_ERROR)
-//				      .entity("Trắng email")
-//				      .build(); 
-//		}
-//		
-//		// edit user info
-//		userDao.saveUser(user);
-//		UserInfo info = userDao.getUserById(user.getId());
-//		Log log = new Log(0, "editUserInfo", "error", "cập nhật user thành công", Config.LOG_TYPE_USER);
-//		logDao.addLog(log);
-//		return Response
-//			      .status(Response.Status.OK)
-//			      .entity(info)
-//			      .build();
-//	}
+	@Path("/editUserInfo")
+	@POST
+    @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editUserInfo(UserInfo user) {
+		// check null
+		if (user.getId() == null || user.getName() == null || user.getEmail() == null ) {
+			Log log = new Log(0, "editUserInfo", "error", "thiếu id, name hoặc email của user", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Thiếu id, tên hoặc email")
+				      .build();
+		}
+		
+		
+		
+		//check id
+		UserInfo testId = userDao.getUserById(user.getId());
+		if (testId == null ) {
+			Log log = new Log(0, "editUserInfo", "error", "không tìm thấy user", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Không tìm thấy user")
+				      .build(); 
+		}
+		
+		if (testId.getLastUpdate() != user.getLastUpdate()) {
+			Log log = new Log(0, "editUserInfo", "error", "dữ liệu cũ", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Dữ liệu cũ")
+				      .build();
+		}
+				
+		//check mail
+		UserInfo test = userDao.getUserByEmail(user.getEmail());
+		if (test != null && !test.getId().equals(user.getId())) {
+			Log log = new Log(0, "editUserInfo", "error", "email không tồn tại", Config.LOG_TYPE_USER);
+			logDao.addLog(log);
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Trắng email")
+				      .build(); 
+		}
+		
+		// edit user info
+		userDao.saveUser(user);
+		UserInfo info = userDao.getUserById(user.getId());
+		Log log = new Log(0, "editUserInfo", "error", "cập nhật user thành công", Config.LOG_TYPE_USER);
+		logDao.addLog(log);
+		return Response
+			      .status(Response.Status.OK)
+			      .entity(info)
+			      .build();
+	}
 	
 	@Path("/removeUserInfo")
 	@POST
