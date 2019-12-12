@@ -18,7 +18,7 @@ public class UserInfo {
 	@Index
 	private String name;
 	@Index
-	String gender= Config.STRING_EMPTY;
+	String gender= Config.GENDER_MALE;
 	@Index
 	long birthday;
 	@Index

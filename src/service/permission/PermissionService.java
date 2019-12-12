@@ -11,6 +11,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -35,7 +37,12 @@ public class PermissionService {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addGroupPermission(GroupPermission groupPermission) {
+	public Response addGroupPermission(GroupPermission groupPermission, @Context HttpHeaders httpHeaders) {
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			//check permissionId
 			Permission permission = permissionDao.getPermissionById(groupPermission.getPermissionId());
@@ -91,7 +98,12 @@ public class PermissionService {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response removeGroupPermission(GroupPermission groupPermision) {
+	public Response removeGroupPermission(GroupPermission groupPermision, @Context HttpHeaders httpHeaders) {
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		if(groupPermision.getGroupId()==0 || groupPermision.getPermissionId()==0) {
 			logDao.addLog(new Log(0, "removeGroupPermission", "error", "thiếu permissionId hoặc groupId", Config.LOG_TYPE_USER));
 			return Response
@@ -124,7 +136,12 @@ public class PermissionService {
 	
 	@Path("/getAllGroupPermissions")
 	@GET
-	public Response getAllGroupPermissions(){
+	public Response getAllGroupPermissions(@Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			logDao.addLog(new Log(0, "getAllGroupPermissions", "success", "success", Config.LOG_TYPE_USER));
 			return Response
@@ -142,7 +159,12 @@ public class PermissionService {
 	
 	@Path("/getMultiGroupPermissions")
 	@GET
-	public Response getMultiGroupPermissions(@QueryParam("listGroupId") String listGroupId){
+	public Response getMultiGroupPermissions(@QueryParam("listGroupId") String listGroupId, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		String[] listId = listGroupId.split(",");
 		List<Long> ids = new ArrayList<Long>();
 		for (int i = 0 ; i < listId.length ; i++) {
@@ -190,7 +212,12 @@ public class PermissionService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addUserPermission(UserPermission userPermission) {
+	public Response addUserPermission(UserPermission userPermission, @Context HttpHeaders httpHeaders) {
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			Permission permission = permissionDao.getPermissionById(userPermission.getPermissionId());
 			if (permission == null) {
@@ -230,7 +257,12 @@ public class PermissionService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response removeUserPermission(UserPermission userPermission) {
+	public Response removeUserPermission(UserPermission userPermission, @Context HttpHeaders httpHeaders) {
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			Permission permission = permissionDao.getPermissionById(userPermission.getPermissionId());
 			if (permission == null) {
@@ -268,7 +300,12 @@ public class PermissionService {
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPermissionsOfUser(@QueryParam("userId") long userId){
+	public Response getPermissionsOfUser(@QueryParam("userId") long userId, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			List<Permission> all = new ArrayList<Permission>();
 			
@@ -299,25 +336,13 @@ public class PermissionService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response checkPermissionOfUser(@QueryParam("userId") long userId, @QueryParam("permissionId") long permissionId, @QueryParam("permissionName") String permissionName){
-		boolean message = false;
-		List<Permission> all = new ArrayList<Permission>();
-		
-		if (permissionDao.getUserPermissions(userId).size()>0)
-			all.addAll(permissionDao.getUserPermissions(userId));
-		List<Long> groupIds = permissionDao.getGroup(userId);
-		for (int i = 0; i< groupIds.size(); i++) {
-			if (permissionDao.getGroupPermissions(groupIds.get(i)).size() > 0) {
-				all.addAll(permissionDao.getGroupPermissions(groupIds.get(i)));
-			}
-		}
-		
-		for (int i = 0 ; i< all.size(); i++) {
-			if (all.get(i).getId() == permissionId) {
-				message = true;
-				break;
-			}
-		}
+	public Response checkPermissionOfUser(@QueryParam("userId") long userId, @QueryParam("permissionId") long permissionId, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
+		boolean message = permissionDao.checkPermissionOfUser(userId, permissionId);
 		logDao.addLog(new Log(0, "checkPermissionOfUser", "success", "success", Config.LOG_TYPE_USER));
 		return Response
 			      .status(Response.Status.OK)
@@ -330,7 +355,12 @@ public class PermissionService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addPermission(Permission permission){
+	public Response addPermission(Permission permission, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		if (permission.getModuleId() == 0) {
 			logDao.addLog(new Log(0, "addPermission", "error", "thiếu moduleId", Config.LOG_TYPE_USER));
 			return Response
@@ -368,7 +398,12 @@ public class PermissionService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response editPermission(Permission permission){
+	public Response editPermission(Permission permission, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		if (permission.getModuleId() == 0) {
 			logDao.addLog(new Log(0, "editPermission", "error", "thiếu moduleId", Config.LOG_TYPE_USER));
 			return Response
@@ -416,7 +451,12 @@ public class PermissionService {
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response checkPermissionOfGroup(@QueryParam("groupId") long groupId, @QueryParam("permissionId") long permissionId){
+	public Response checkPermissionOfGroup(@QueryParam("groupId") long groupId, @QueryParam("permissionId") long permissionId, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			Permission permission = permissionDao.getPermissionById(permissionId);
 			if (permission == null) {
@@ -458,7 +498,12 @@ public class PermissionService {
 	
 	@Path("/getAllPermissions")
 	@GET
-	public Response getAllPermissions(@QueryParam("moduleId") long moduleId){
+	public Response getAllPermissions(@QueryParam("moduleId") long moduleId, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			return Response
 				      .status(Response.Status.OK)

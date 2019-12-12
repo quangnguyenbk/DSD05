@@ -115,6 +115,7 @@ public class PermissionDao {
 	
 	public long addPermission(Permission permission) {
 		permission.setLastUpdated((new Date()).getTime());
+		permission.setModuleName(getModuleById(permission.getModuleId()).getName());
 		return ofy().save().entity(permission).now().getId(); 
 	}
 	
@@ -150,8 +151,35 @@ public class PermissionDao {
 		  }
 		  return pers;
 	}
-	
+	public boolean checkPermissionOfUser(long userId, long permissionId) {
+		boolean message = false;
+		List<Permission> all = new ArrayList<Permission>();
+		try {
+			if (getUserPermissions(userId).size()>0)
+				all.addAll(getUserPermissions(userId));
+			List<Long> groupIds = getGroup(userId);
+			for (int i = 0; i< groupIds.size(); i++) {
+				if (getGroupPermissions(groupIds.get(i)).size() > 0) {
+					all.addAll(getGroupPermissions(groupIds.get(i)));
+				}
+			}
+			
+			for (int i = 0 ; i< all.size(); i++) {
+				if (all.get(i).getId() == permissionId) {
+					message = true;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		return message;
+	}
 	//module
+	public List<Module> getModuleByName(String name) {
+		return ofy().load().type(Module.class).filter("name", name).list(); 
+	}
+	
 	public Module getModuleById(long id) {
 		return ofy().load().type(Module.class).id(id).now(); 
 	}

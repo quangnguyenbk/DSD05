@@ -9,12 +9,27 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import dao.PermissionDao;
 import dao.UserDao;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.impl.DefaultJwtParser;
 import model.Permission;
+import model.UserInfo;
+import utils.Config;
+import model.Log;
 import model.Module;
 import model.ModuleDepartment;
 
@@ -27,8 +42,19 @@ public class ModuleService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addModule(Module module){
-		//add permission
+	public Response addModule(Module module, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
+		if (permissionDao.getModuleByName(module.getName()).size()>0) {
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("trùng tên")
+				      .build();
+		}
+		//add module
 		long id = permissionDao.addModule(module);
 		Module temp = permissionDao.getModuleById(id);
 		return Response
@@ -41,7 +67,12 @@ public class ModuleService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response editModule(Module module){
+	public Response editModule(Module module, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		//add permission
 		Module temp = permissionDao.getModuleById(module.getId());
 		if (temp == null) {
@@ -67,7 +98,12 @@ public class ModuleService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addModuleDepartment(ModuleDepartment rd){
+	public Response addModuleDepartment(ModuleDepartment rd , @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		// check input
 		if (rd.getModuleId() == 0) {
 			return Response
@@ -94,7 +130,12 @@ public class ModuleService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response removeModuleDepartment(ModuleDepartment rd){
+	public Response removeModuleDepartment(ModuleDepartment rd , @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		// check input
 		if (rd.getModuleId() == 0) {
 			return Response
@@ -121,7 +162,12 @@ public class ModuleService {
 	@Path("/getAllModules")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllModules(){
+	public Response getAllModules(@Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			return Response
 				      .status(Response.Status.OK)
@@ -138,7 +184,12 @@ public class ModuleService {
 	@Path("/getDepartmentModules")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDepartmentModules(@QueryParam("departmentId") long departmentId){
+	public Response getDepartmentModules(@QueryParam("departmentId") long departmentId, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		try {
 			return Response
 				      .status(Response.Status.OK)
@@ -155,7 +206,12 @@ public class ModuleService {
 	@Path("/getDepartmentPermissions")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDepartmentPermissions(@QueryParam("departmentId") long departmentId){
+	public Response getDepartmentPermissions(@QueryParam("departmentId") long departmentId, @Context HttpHeaders httpHeaders){
+		if (!Config.checkPermissionUser(Config.getUserFromHeader(httpHeaders), Config.ADMIN_PERMISSION))
+			return Response
+				      .status(Response.Status.INTERNAL_SERVER_ERROR)
+				      .entity("Bạn không có quyền thực hiện chức năng này")
+				      .build();
 		
 		List<Module> modules = permissionDao.getDepartmentModules(departmentId);
 		List<Permission> permissions = new ArrayList<Permission>();

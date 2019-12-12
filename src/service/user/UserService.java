@@ -173,7 +173,9 @@ public class UserService {
 		}
 		
 		// call register
-		
+		if (!user.getGender().equals(Config.GENDER_MALE)) {
+			user.setGender(Config.GENDER_FEMALE);
+		}
 		user.setUsername(user.getEmail());
 		userDao.addUser(user);
 		UserInfo info = userDao.getUserByEmail(user.getEmail());
@@ -232,7 +234,6 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<UserInfo> getUserInfos(@Context UriInfo uriDetails){
 		
-	    CommonUtils.getLog().info("service getUserInfos was called by " + uriDetails.getAbsolutePath());  
 		ArrayList<UserInfo> listInfo = new ArrayList<UserInfo>();
 		listInfo.addAll(userDao.getUserInfos());
 		Log log = new Log(0, "getUserInfos", "success", "Lấy thành công danh sách users", Config.LOG_TYPE_USER);

@@ -25,6 +25,8 @@ public class Permission {
 	private String url = Config.STRING_EMPTY;
 	@Index
 	private long moduleId = Config.DEFAULT_LONG;
+	@Index
+	private String moduleName = Config.STRING_EMPTY;
 	private String description;
 	@Index
 	private long createdDate;
@@ -85,6 +87,12 @@ public class Permission {
 	}
 	public void setGroupId(long groupId) {
 		this.groupId = groupId;
+	}
+	public String getModuleName() {
+		return moduleName;
+	}
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
 	}
 	
 	
